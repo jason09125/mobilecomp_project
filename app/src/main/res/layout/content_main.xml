@@ -5,7 +5,7 @@
 
     <data>
 
-        <import type="hk.edu.hkbu.comp.lab01.ListViewModel" />
+        <!--<import type="hk.edu.hkbu.comp.lab01.ListViewModel" />-->
 
         <variable
             name="centerText"
@@ -13,7 +13,7 @@
 
         <variable
             name="listViewModel"
-            type="ListViewModel&lt;hk.edu.hkbu.comp.lab01.json.Thread>" />
+            type="hk.edu.hkbu.comp.lab01.ListViewModel&lt;hk.edu.hkbu.comp.lab01.json.Thread>" />
     </data>
 
     <android.support.constraint.ConstraintLayout
