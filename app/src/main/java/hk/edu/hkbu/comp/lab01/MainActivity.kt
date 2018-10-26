@@ -1,25 +1,39 @@
 package hk.edu.hkbu.comp.lab01
 
 import android.databinding.DataBindingUtil
+import android.databinding.ObservableArrayList
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import hk.edu.hkbu.comp.lab01.databinding.ActivityMainBinding
+import hk.edu.hkbu.comp.lab01.json.Response
+import hk.edu.hkbu.comp.lab01.json.ThreadList
+import hk.edu.hkbu.comp.lab01.json.Thread
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
+import retrofit2.Call
+import retrofit2.Callback
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+
+    lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        setContentView(R.layout.activity_main)
-        val binding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+
         binding.appBarMain?.contentMain?.centerText = "Mayanne: I love U"
+
+        binding.appBarMain?.contentMain?.listViewModel = ListViewModel<Thread>(BR.threadItem, R.layout.content_main_item)
+
         setSupportActionBar(toolbar)
 
         fab.setOnClickListener { view ->
@@ -33,6 +47,26 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
 
         nav_view.setNavigationItemSelectedListener(this)
+
+        refreshThread()
+    }
+
+    fun refreshThread() {
+        LIHKGService.instance.getLatestThread().enqueue(object : Callback<Response<ThreadList>> {
+            override fun onFailure(call: Call<Response<ThreadList>>, t: Throwable) {
+                Log.e("MainActivity", t.message)
+            }
+
+            override fun onResponse(call: Call<Response<ThreadList>>, response: retrofit2.Response<Response<ThreadList>>) {
+                if (response.isSuccessful) {
+                    val threads = response.body()?.response?.items as List<Thread>
+                    with(binding.appBarMain.contentMain.listViewModel?.items as ObservableArrayList<Thread>) {
+                        clear()
+                        addAll(threads)
+                    }
+                }
+            }
+        })
     }
 
     override fun onBackPressed() {
@@ -54,6 +88,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         when (item.itemId) {
+            R.id.action_refresh -> {
+                refreshThread()
+                return true
+            }
             R.id.action_settings -> return true
             else -> return super.onOptionsItemSelected(item)
         }

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <import type="android.support.design.widget.Snackbar" />
+        <variable  name="threadItem"
+            type="hk.edu.hkbu.comp.lab01.json.Thread"/>
+    </data>
+    <LinearLayout  android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout  android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <android.support.v7.widget.AppCompatTextView  android:id="@+id/content_main_item_hot"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text='@{threadItem.is_hot ? "\u2668" : ""}'
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                android:textColor="@color/colorAccent"
+                android:textSize="24dp"
+                android:visibility='@{threadItem.is_hot ? View.VISIBLE : View.GONE}' />
+
+            <android.support.v7.widget.AppCompatButton  android:id="@+id/content_main_item_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:onClick='@{(view) -> Snackbar.make(view, threadItem.title, Snackbar.LENGTH_LONG).show()}'
+                android:text="@{threadItem.title}"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+        </LinearLayout>
+        <android.support.constraint.ConstraintLayout  android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView  app:layout_constraintStart_toStartOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text='@{"" + threadItem.item_data.size() + "/" + threadItem.no_of_reply}'
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+            <TextView  app:layout_constraintEnd_toEndOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text='@{threadItem.user_nickname}'
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+        </android.support.constraint.ConstraintLayout>
+        <ProgressBar  android:id="@+id/progress_horizontal"
+            style="@android:style/Widget.Material.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:progress='@{(threadItem.item_data.size() / Integer.parseInt(threadItem.no_of_reply) * 100)}' />
+
+    </LinearLayout></layout>
