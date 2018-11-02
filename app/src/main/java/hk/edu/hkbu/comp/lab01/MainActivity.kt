@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import retrofit2.Call
 import retrofit2.Callback
+import android.content.Intent
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -122,5 +123,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    fun showThreadActivity(thread:Thread) {
+        with(Intent(this, ThreadActivity::class.java)) {
+            startActivity(this)
+            overridePendingTransition(R.anim.child_enter, R.anim.parent_exit)
+        }
+    }
+
+    fun showPostActivity(thread: Thread) {
+        with(Intent(this, ThreadActivity::class.java)) {
+            putExtra("thread", thread)
+            startActivity(this)
+            overridePendingTransition(R.anim.child_enter, R.anim.parent_exit)
+        }
     }
 }

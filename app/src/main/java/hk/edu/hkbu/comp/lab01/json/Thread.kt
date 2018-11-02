@@ -1,5 +1,9 @@
 package hk.edu.hkbu.comp.lab01.json
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
 data class Thread(
         val thread_id: String,
         val cat_id: String,
@@ -31,6 +35,6 @@ data class Thread(
         val user: User,
 //        val sub_category: SubCategory
         val sub_category: SubCategory?,
-        val page: String = "1",
-        val item_data: List<Post> = mutableListOf<Post>()
-)
+        val page: String? = "1",
+        val item_data: List<Post>? = mutableListOf<Post>()
+) : Parcelable

@@ -1,5 +1,8 @@
 package hk.edu.hkbu.comp.lab01.json
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class Post(
         val post_id: String,
         val quote_post_id: String,
@@ -16,4 +19,4 @@ data class Post(
         val user: User,
         val page: Int,
         val msg_num: Int
-)
+) : Parcelable
