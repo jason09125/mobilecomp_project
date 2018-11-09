@@ -2,13 +2,40 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
+    <data>
+        <import type="android.databinding.ObservableArrayList" />
+        <variable name="itemBinding"
+            type="me.tatarka.bindingcollectionadapter2.ItemBinding&lt;hk.edu.hkbu.comp.lab01.json.Post>" />
+        <variable name="posts"
+            type="ObservableArrayList&lt;hk.edu.hkbu.comp.lab01.json.Post>"/>
+        <variable name="numPosts"
+            type="Integer" />
+    </data>
+    <android.support.constraint.ConstraintLayout  android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context=".ThreadActivity"
         tools:showIn="@layout/activity_thread">
+
+        <ProgressBar android:id="@+id/progress_horizontal"
+            style="@android:style/Widget.Material.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:progress='@{(posts.size() * 100) / numPosts}' />
+
+        <android.support.v7.widget.RecyclerView android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+            app:itemBinding="@{itemBinding}"
+            app:items="@{posts}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 </layout>

@@ -1,6 +1,7 @@
 package hk.edu.hkbu.comp.lab01
 
 import android.databinding.DataBindingUtil
+import android.databinding.ObservableArrayList
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
@@ -10,10 +11,17 @@ import hk.edu.hkbu.comp.lab01.json.Thread
 
 import kotlinx.android.synthetic.main.activity_thread.*
 import hk.edu.hkbu.comp.lab01.databinding.*
+import hk.edu.hkbu.comp.lab01.json.Post
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import me.tatarka.bindingcollectionadapter2.ItemBinding
+import java.nio.channels.Channel
 
 class ThreadActivity : AppCompatActivity() {
 
     lateinit var thread: Thread
+    val channelPosts = Channel<List<Post>>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,9 +39,37 @@ class ThreadActivity : AppCompatActivity() {
 
         thread = intent.extras["thread"] as Thread
         getSupportActionBar()?.setTitle(thread.title)
+
+        if (thread.item_data.isNullOrEmpty())
+            thread.item_data = ObservableArrayList<Post>()
+
+        binding.contentThread.itemBinding = ItemBinding.of<Post>(BR.post, R.layout.content_thread_item)
+        binding.contentThread.posts = thread.item_data as? ObservableArrayList<Post>
+        binding.contentThread.numPosts = thread.no_of_reply.toInt()
+
+        fetchThreadPosts()
+
+        GlobalScope.launch(Dispatchers.Main) {
+            repeat(thread.total_page) {
+                binding.contentThread.posts?.addAll(channelPosts.receive())
+                binding.contentThread.executePendingBindings()
+            }
+        }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    fun fetchThreadPosts() = GlobalScope.launch(Dispatchers.Default) {
+        for (i in 1..thread.total_page.toInt()) {
+            launch(Dispatchers.IO) {
+                val call = LIHKGService.instance.getThreadPosts(thread.thread_id, "$i", "msg_num").execute()
+                if (call.isSuccessful) {
+                    val posts = call.body()?.response?.item_data as List<Post>
+                    channelPosts.send(posts)
+                }
+            }.join()
+        }
+    }
+
+            override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long // as you specify a parent activity in AndroidManifest.xml.
         when (item.itemId) {

@@ -38,8 +38,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setSupportActionBar(toolbar)
 
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                    .setAction("Action", null).show()
+            with(Intent(this, LoginActivity::class.java)) {
+                startActivity(this)
+            }
         }
 
         val toggle = ActionBarDrawerToggle(
@@ -127,6 +130,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     fun showThreadActivity(thread:Thread) {
         with(Intent(this, ThreadActivity::class.java)) {
+            putExtra("thread", thread)
             startActivity(this)
             overridePendingTransition(R.anim.child_enter, R.anim.parent_exit)
         }

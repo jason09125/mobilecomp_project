@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "448751435608",
+    "firebase_url": "https://lab05-1913a.firebaseio.com",
+    "project_id": "lab05-1913a",
+    "storage_bucket": "lab05-1913a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:448751435608:android:2b76bf4b74fbc8ee",
+        "android_client_info": {
+          "package_name": "hk.edu.hkbu.comp.lab01"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "448751435608-f1gl5ha1u16oiruftl3pio304vqs3j3l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "hk.edu.hkbu.comp.lab01",
+            "certificate_hash": "844ad7307101d69dd74aa463ee0d305db7e6969c"
+          }
+        },
+        {
+          "client_id": "448751435608-9ji03rm068fbrpiuiv3k0mrvcpmv1ge7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAKIFwPQzknNNx0pRBSTSNb8pZ7TQXDGt0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "448751435608-9ji03rm068fbrpiuiv3k0mrvcpmv1ge7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
