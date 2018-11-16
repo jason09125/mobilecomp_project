@@ -2,6 +2,7 @@ package hk.edu.hkbu.comp.lab01
 
 import hk.edu.hkbu.comp.lab01.json.Response
 import hk.edu.hkbu.comp.lab01.json.ThreadList
+import hk.edu.hkbu.comp.lab01.json.Thread
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

@@ -36,5 +36,5 @@ data class Thread(
 //        val sub_category: SubCategory
         val sub_category: SubCategory?,
         val page: String? = "1",
-        val item_data: List<Post>? = mutableListOf<Post>()
+        var item_data: List<Post>? = mutableListOf<Post>()
 ) : Parcelable

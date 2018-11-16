@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
+import com.google.firebase.firestore.FirebaseFirestore
 import hk.edu.hkbu.comp.lab01.databinding.ActivityThreadBinding
 import hk.edu.hkbu.comp.lab01.json.Thread
 
@@ -14,9 +15,9 @@ import hk.edu.hkbu.comp.lab01.databinding.*
 import hk.edu.hkbu.comp.lab01.json.Post
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import me.tatarka.bindingcollectionadapter2.ItemBinding
-import java.nio.channels.Channel
 
 class ThreadActivity : AppCompatActivity() {
 
@@ -25,13 +26,14 @@ class ThreadActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_thread)
+        val binding: ActivityThreadBinding = DataBindingUtil.setContentView(this, R.layout.activity_thread)
         setSupportActionBar(toolbar)
 
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
-            val binding: ActivityThreadBinding = DataBindingUtil.setContentView(this, R.layout.activity_thread)
+            FirebaseFirestore.getInstance().collection("thread").add(thread).addOnSuccessListener {
+                Snackbar.make(view, "Thread saved", Snackbar.LENGTH_LONG)
+                        .setAction("Done", null).show()
+            }
         }
 
         getSupportActionBar()?.setDisplayHomeAsUpEnabled(true)
@@ -69,7 +71,7 @@ class ThreadActivity : AppCompatActivity() {
         }
     }
 
-            override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long // as you specify a parent activity in AndroidManifest.xml.
         when (item.itemId) {
