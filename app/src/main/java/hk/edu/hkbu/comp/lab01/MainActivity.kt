@@ -20,6 +20,7 @@ import kotlinx.android.synthetic.main.app_bar_main.*
 import retrofit2.Call
 import retrofit2.Callback
 import android.content.Intent
+import android.view.View
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -142,5 +143,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             startActivity(this)
             overridePendingTransition(R.anim.child_enter, R.anim.parent_exit)
         }
+    }
+
+    fun showProfileActivity(view: View) {
+
     }
 }
