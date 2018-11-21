@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
+import android.view.View
 import com.google.firebase.firestore.FirebaseFirestore
 import hk.edu.hkbu.comp.lab01.databinding.ActivityThreadBinding
 import hk.edu.hkbu.comp.lab01.json.Thread
@@ -13,6 +14,8 @@ import hk.edu.hkbu.comp.lab01.json.Thread
 import kotlinx.android.synthetic.main.activity_thread.*
 import hk.edu.hkbu.comp.lab01.databinding.*
 import hk.edu.hkbu.comp.lab01.json.Post
+import io.github.yavski.fabspeeddial.FabSpeedDial
+import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.Channel
@@ -30,22 +33,27 @@ class ThreadActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         // original fab function
-        fab.setOnClickListener {
-            view ->
-            {
-                when (view.gitId) {
+        binding.fabMenu.setMenuListener(object : SimpleMenuListenerAdapter() {
+            override fun onMenuItemSelected(menuItem: MenuItem?): Boolean {
+                when (menuItem?.itemId) {
                     R.id.action_comment -> {
 
                     }
                     R.id.action_save -> {
                         FirebaseFirestore.getInstance().collection("thread").add(thread).addOnSuccessListener {
-                            Snackbar.make(view, "Thread saved", Snackbar.LENGTH_LONG)
+                            Snackbar.make(binding.root, "Thread saved", Snackbar.LENGTH_LONG)
                                     .setAction("Done", null).show()
                         }
                     }
+                    else -> {
+
+                    }
                 }
+                return super.onMenuItemSelected(menuItem)
             }
-        }
+        })
+
+
 
         getSupportActionBar()?.setDisplayHomeAsUpEnabled(true)
         getSupportActionBar()?.setDisplayShowHomeEnabled(true)

@@ -27,8 +27,12 @@ import android.widget.Toast
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import hk.edu.hkbu.comp.lab01.json.Login
+import hk.edu.hkbu.comp.lab01.json.Response
 
 import kotlinx.android.synthetic.main.activity_login.*
+import retrofit2.Call
+import retrofit2.Callback
 
 /**
  * A login screen that offers login via email/password.
@@ -144,17 +148,29 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
 //            mAuthTask!!.execute(null as Void?)
 
             showProgress(true)
-            FirebaseAuth.getInstance().signInWithEmailAndPassword(emailStr, passwordStr).addOnCompleteListener(this, OnCompleteListener<AuthResult> { task ->
-                showProgress(false)
-                if (task.isSuccessful()) {
-                    val user = FirebaseAuth.getInstance().getCurrentUser()
-                    println(user)
-                    finish()
-                } else {
-                    // If sign in fails, display a message to the user.
+            LIHKGService.instance.login().enqueue(object:retrofit2.Callback<Response<Login>>(){
+                override fun onFailure(call: Call<Response<Login>>, t: Throwable) {
+//                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                     Toast.makeText(this@LoginActivity, "Authentication failed.", Toast.LENGTH_SHORT).show()
                 }
+
+                override fun onResponse(call: Call<Response<Login>>, response: retrofit2.Response<Response<Login>>) {
+//                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                    finish()
+                }
+
             })
+//            FirebaseAuth.getInstance().signInWithEmailAndPassword(emailStr, passwordStr).addOnCompleteListener(this, OnCompleteListener<AuthResult> { task ->
+//                showProgress(false)
+//                if (task.isSuccessful()) {
+//                    val user = FirebaseAuth.getInstance().getCurrentUser()
+//                    println(user)
+//                    finish()
+//                } else {
+//                    // If sign in fails, display a message to the user.
+//                    Toast.makeText(this@LoginActivity, "Authentication failed.", Toast.LENGTH_SHORT).show()
+//                }
+//            })
         }
     }
 
