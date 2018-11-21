@@ -31,6 +31,12 @@ class ThreadActivity : AppCompatActivity() {
 
         // original fab function
         fab.setOnClickListener {
+//            if(R.id==action_comment){
+//
+//            }
+
+            
+
             view -> FirebaseFirestore.getInstance().collection("thread").add(thread).addOnSuccessListener {
                 Snackbar.make(view, "Thread saved", Snackbar.LENGTH_LONG)
                         .setAction("Done", null).show()
