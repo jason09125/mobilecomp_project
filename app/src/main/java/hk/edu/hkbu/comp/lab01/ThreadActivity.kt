@@ -31,15 +31,19 @@ class ThreadActivity : AppCompatActivity() {
 
         // original fab function
         fab.setOnClickListener {
-//            if(R.id==action_comment){
-//
-//            }
+            view ->
+            {
+                when (view.gitId) {
+                    R.id.action_comment -> {
 
-            
-
-            view -> FirebaseFirestore.getInstance().collection("thread").add(thread).addOnSuccessListener {
-                Snackbar.make(view, "Thread saved", Snackbar.LENGTH_LONG)
-                        .setAction("Done", null).show()
+                    }
+                    R.id.action_save -> {
+                        FirebaseFirestore.getInstance().collection("thread").add(thread).addOnSuccessListener {
+                            Snackbar.make(view, "Thread saved", Snackbar.LENGTH_LONG)
+                                    .setAction("Done", null).show()
+                        }
+                    }
+                }
             }
         }
 
