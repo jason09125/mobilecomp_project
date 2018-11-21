@@ -143,15 +143,16 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            showProgress(true)
+//            showProgress(true)
 //            mAuthTask = UserLoginTask(emailStr, passwordStr)
 //            mAuthTask!!.execute(null as Void?)
 
             showProgress(true)
-            LIHKGService.instance.login().enqueue(object:retrofit2.Callback<Response<Login>>(){
+            LIHKGService.instance.login(emailStr, passwordStr).enqueue(object:retrofit2.Callback<Response<Login>>{
                 override fun onFailure(call: Call<Response<Login>>, t: Throwable) {
 //                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                     Toast.makeText(this@LoginActivity, "Authentication failed.", Toast.LENGTH_SHORT).show()
+                    showProgress(false)
                 }
 
                 override fun onResponse(call: Call<Response<Login>>, response: retrofit2.Response<Response<Login>>) {

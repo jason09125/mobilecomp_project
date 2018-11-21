@@ -1,6 +1,6 @@
 package hk.edu.hkbu.comp.lab01.json
 
-import hk.edu.hkbu.comp.lab01.test.User
+import hk.edu.hkbu.comp.lab01.json.User
 
 data class Login(
         val category_order: List<Any>,
