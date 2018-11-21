@@ -21,7 +21,7 @@
             style="@android:style/Widget.Material.ProgressBar.Horizontal"
             android:layout_width="match_parent"
             android:layout_height="2dp"
-            android:progress='@{(posts.size() * 100) / numPosts}' />
+            android:progress='@{(posts.size() * 100) / safeUnbox(numPosts)}' />
 
         <android.support.v7.widget.RecyclerView android:layout_width="match_parent"
             android:layout_height="0dp"

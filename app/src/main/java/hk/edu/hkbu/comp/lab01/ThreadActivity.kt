@@ -29,8 +29,9 @@ class ThreadActivity : AppCompatActivity() {
         val binding: ActivityThreadBinding = DataBindingUtil.setContentView(this, R.layout.activity_thread)
         setSupportActionBar(toolbar)
 
-        fab.setOnClickListener { view ->
-            FirebaseFirestore.getInstance().collection("thread").add(thread).addOnSuccessListener {
+        // original fab function
+        fab.setOnClickListener {
+            view -> FirebaseFirestore.getInstance().collection("thread").add(thread).addOnSuccessListener {
                 Snackbar.make(view, "Thread saved", Snackbar.LENGTH_LONG)
                         .setAction("Done", null).show()
             }
