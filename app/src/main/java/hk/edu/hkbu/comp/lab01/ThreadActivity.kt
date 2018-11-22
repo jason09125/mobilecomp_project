@@ -89,9 +89,11 @@ class ThreadActivity : AppCompatActivity() {
         fetchThreadPosts()
 
         GlobalScope.launch(Dispatchers.Main) {
-            repeat(thread.total_page) {
+            while(true){
                 // here to seperate the pages
-                binding.contentThread.posts?.addAll(channelPosts.receive())
+                val arr = channelPosts.receive()
+                binding.contentThread.posts?.clear()
+                binding.contentThread.posts?.addAll(arr)
                 binding.contentThread.executePendingBindings()
             }
         }
