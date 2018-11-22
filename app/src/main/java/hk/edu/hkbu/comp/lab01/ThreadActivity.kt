@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import com.google.firebase.firestore.FirebaseFirestore
 import hk.edu.hkbu.comp.lab01.databinding.ActivityThreadBinding
 import hk.edu.hkbu.comp.lab01.json.Thread
@@ -26,10 +27,11 @@ class ThreadActivity : AppCompatActivity() {
 
     lateinit var thread: Thread
     val channelPosts = Channel<List<Post>>()
+    var current_page: Int = 1;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding: ActivityThreadBinding = DataBindingUtil.setContentView(this, R.layout.activity_thread)
+        var binding: ActivityThreadBinding = DataBindingUtil.setContentView(this, R.layout.activity_thread)
         setSupportActionBar(toolbar)
 
         // original fab function
@@ -45,6 +47,24 @@ class ThreadActivity : AppCompatActivity() {
                                     .setAction("Done", null).show()
                         }
                     }
+                    R.id.action_next_page -> {
+                        if (current_page < thread.total_page.toInt())
+                        {
+                            current_page+=1
+                            fetchThreadPosts()
+                        } else {
+                            Toast.makeText(this@ThreadActivity, "It's the last page!", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                    R.id.action_prev_page -> {
+                        if(current_page > 1)
+                        {
+                            current_page-=1
+                            fetchThreadPosts()
+                        } else {
+                            Toast.makeText(this@ThreadActivity, "It's the first page!", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                     else -> {
 
                     }
@@ -52,8 +72,6 @@ class ThreadActivity : AppCompatActivity() {
                 return super.onMenuItemSelected(menuItem)
             }
         })
-
-
 
         getSupportActionBar()?.setDisplayHomeAsUpEnabled(true)
         getSupportActionBar()?.setDisplayShowHomeEnabled(true)
@@ -72,6 +90,7 @@ class ThreadActivity : AppCompatActivity() {
 
         GlobalScope.launch(Dispatchers.Main) {
             repeat(thread.total_page) {
+                // here to seperate the pages
                 binding.contentThread.posts?.addAll(channelPosts.receive())
                 binding.contentThread.executePendingBindings()
             }
@@ -79,14 +98,15 @@ class ThreadActivity : AppCompatActivity() {
     }
 
     fun fetchThreadPosts() = GlobalScope.launch(Dispatchers.Default) {
-        for (i in 1..thread.total_page.toInt()) {
+//        for (i in 1..thread.total_page.toInt()) {
             launch(Dispatchers.IO) {
-                val call = LIHKGService.instance.getThreadPosts(thread.thread_id, "$i", "msg_num").execute()
+                val call = LIHKGService.instance.getThreadPosts(thread.thread_id, "$current_page", "msg_num").execute()
                 if (call.isSuccessful) {
                     val posts = call.body()?.response?.item_data as List<Post>
                     channelPosts.send(posts)
-                }
-            }.join()
+//                }
+            }
+//                        .join()
         }
     }
 

@@ -157,6 +157,7 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
 
                 override fun onResponse(call: Call<Response<Login>>, response: retrofit2.Response<Response<Login>>) {
 //                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+//                    print(response)
                     finish()
                 }
 
@@ -182,7 +183,7 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
 
     private fun isPasswordValid(password: String): Boolean {
         //TODO: Replace this with your own logic
-        return password.length > 4
+        return password.length > 6
     }
 
     /**
