@@ -43,6 +43,9 @@ interface LIHKGService {
     @GET("/api_v2/thread/latest/page/1")
     fun getLatestThread(@Query("cat_id") cat_id: Int = 1): Call<Response<ThreadList>>
 
+    @GET("/api_v2/thread{current_category}")
+    fun getThread(@Query("current_category") current_category: String = "/latest/page/1"): Call<Response<ThreadList>>
+
     @GET("/api_v2/thread/{thread_id}/page/{page}")
     fun getThreadPosts(@Path("thread_id") threadId: String, @Path("page") page: String, @Query("order") order: String = "reply_time"): Call<Response<Thread>>
 

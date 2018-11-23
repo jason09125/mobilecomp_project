@@ -26,6 +26,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     lateinit var binding: ActivityMainBinding
 
+    var current_page: Int = 1
+
+
+    var current_category: String = "/latest/page/${current_page}"
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        setContentView(R.layout.activity_main)
@@ -59,7 +65,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     fun refreshThread() {
-        LIHKGService.instance.getLatestThread().enqueue(object : Callback<Response<ThreadList>> {
+        LIHKGService.instance.getThread(this.current_category).enqueue(object : Callback<Response<ThreadList>> {
             override fun onFailure(call: Call<Response<ThreadList>>, t: Throwable) {
                 Log.e("MainActivity", t.message)
             }
@@ -105,33 +111,42 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
+        current_page = 1;
+
         when (item.itemId) {
+
             R.id.nav_catergory_lm -> {
-                // Handle the camera action
+                // Handle the lm action
             }
             R.id.nav_catergory_hot -> {
+                current_category = "/hot/page/${current_page}"
 
             }
             R.id.nav_catergory_chat -> {
+                current_category = "/latest/page/${current_page}"
 
             }
             R.id.nav_catergory_news -> {
+                current_category = "/category?cat_id=5&page=${current_page}"
 
             }
             R.id.nav_catergory_creative -> {
-
+                current_category = "/category?cat_id=31&page=${current_page}"
             }
             R.id.nav_catergory_hardware -> {
+                current_category = "/category?cat_id=22&page=${current_page}"
 
             }
             R.id.nav_catergory_movie -> {
+                current_category = "/category?cat_id=11&page=${current_page}"
 
             }
             R.id.nav_catergory_children -> {
+                current_category = "/category?cat_id=29&page=${current_page}"
 
             }
             R.id.nav_catergory_blackhole -> {
-
+                current_category = "/category?cat_id=32&page=${current_page}"
             }
         }
 

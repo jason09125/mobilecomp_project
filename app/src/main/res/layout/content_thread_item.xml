@@ -23,13 +23,13 @@
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/motherlandyellow">
+            android:background="#000000">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text='@{post.user_nickname}'
-                android:textColor="@color/motherlandred"
+                android:textColor="@color/motherlandyellow"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <TextView
