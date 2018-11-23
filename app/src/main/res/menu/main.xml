@@ -6,8 +6,19 @@
         android:id="@+id/action_refresh"
         android:orderInCategory="100"
 
-        app:titleTextColor="@color/motherlandyellow"
+        android:titleTextColor="@color/motherlandyellow"
         android:title="F5"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_next_list"
+        android:orderInCategory="100"
+
+        android:titleTextColor="@color/motherlandyellow"
+        android:icon="@drawable/ic_next_page"
+        app:showAsAction="ifRoom" />
+
+
+
 
 </menu>

@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     lateinit var binding: ActivityMainBinding
 
-    var current_page: Int = 1
+    private var current_page: Int = 1
 
 
     var current_category: String = "hot/page/1"
@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onCreate(savedInstanceState)
 //        setContentView(R.layout.activity_main)
 //        setTitle("偉大嘅紅登討論區")
-        Log.d("mainact",current_category)
+        Log.d("mainact", current_category)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setSupportActionBar(toolbar)
 
         fab.setOnClickListener { view ->
-//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+            //            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                    .setAction("Action", null).show()
             with(Intent(this, LoginActivity::class.java)) {
                 startActivity(this)
@@ -65,7 +65,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     fun refreshThread() {
-        LIHKGService.instance.getLatestThread().enqueue(object : Callback<Response<ThreadList>> {
+        Log.d("current_page", current_page.toString())
+
+        LIHKGService.instance.getLatestThread(page = current_page.toString()).enqueue(object : Callback<Response<ThreadList>> {
             override fun onFailure(call: Call<Response<ThreadList>>, t: Throwable) {
                 Log.e("MainActivity", t.message)
             }
@@ -102,6 +104,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // as you specify a parent activity in AndroidManifest.xml.
         when (item.itemId) {
             R.id.action_refresh -> {
+                current_page = 1
+                refreshThread()
+                return true
+            }
+            R.id.action_next_list -> {
+                current_page += 1
                 refreshThread()
                 return true
             }
@@ -154,7 +162,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
-    fun showThreadActivity(thread:Thread) {
+    fun showThreadActivity(thread: Thread) {
         with(Intent(this, ThreadActivity::class.java)) {
             putExtra("thread", thread)
             startActivity(this)
