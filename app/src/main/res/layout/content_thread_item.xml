@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <data>
+
         <import type="java.time.Instant" />
+
         <import type="java.time.ZoneId" />
+
         <import type="android.text.Html" />
-        <variable  name="post"
-            type="hk.edu.hkbu.comp.lab01.json.Post"/>
+
+        <variable
+            name="post"
+            type="hk.edu.hkbu.comp.lab01.json.Post" />
     </data>
-    <LinearLayout  android:layout_width="match_parent"
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
@@ -17,23 +25,29 @@
             android:layout_height="match_parent"
             android:background="@color/colorPrimaryDark">
 
-            <TextView  android:layout_width="wrap_content"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
+                android:text='@{post.user_nickname}'
                 android:textColor="@android:color/primary_text_dark"
-                android:text='@{post.user_nickname}'/>
+                app:layout_constraintStart_toStartOf="parent" />
 
-            <TextView  android:layout_width="wrap_content"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:text='@{(Instant.ofEpochSecond(post.reply_time).atZone(ZoneId.of("Asia/Hong_Kong")).toString()).replace("+08:00[Asia/Hong_Kong]","").replace("T", " ")}'
                 android:textColor="@android:color/primary_text_dark"
-                android:text='@{Instant.ofEpochSecond(post.reply_time).atZone(ZoneId.of("Asia/Hong_Kong")).toString()}'/>
+                app:layout_constraintEnd_toEndOf="parent" />
         </android.support.constraint.ConstraintLayout>
-        <WebView  android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:html='@{post.msg.replaceAll("&lt;img src=\"/assets/","&lt;img src=\"https://lihkg.com/assets/")}'/>
 
-        <android.support.v4.widget.Space  android:layout_width="match_parent"
+        <WebView
+            android:id="@+id/thread_webview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:html='@{post.msg.replaceAll("&lt;img src=\"/assets/","&lt;img src=\"https://lihkg.com/assets/")}' />
+
+        <android.support.v4.widget.Space
+            android:layout_width="match_parent"
             android:layout_height="10dp" />
     </LinearLayout>
 </layout>
