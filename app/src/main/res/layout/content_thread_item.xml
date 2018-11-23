@@ -44,7 +44,7 @@
             android:id="@+id/thread_webview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:html='@{post.msg.replaceAll("&lt;img src=\"/assets/","&lt;img src=\"https://lihkg.com/assets/")}' />
+            app:html='@{post.msg.replaceAll("&lt;img src=\"/assets/","&lt;img src=\"https://lihkg.com/assets/").replaceAll("&lt;img ", "&lt;img style=\"max-width:100%\" ")}' />
 
         <android.support.v4.widget.Space
             android:layout_width="match_parent"

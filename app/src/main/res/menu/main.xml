@@ -10,11 +10,4 @@
         android:title="F5"
         app:showAsAction="ifRoom" />
 
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        app:titleTextColor="@color/motherlandyellow"
-        android:title="@string/action_settings"
-        app:showAsAction="ifRoom" />
-
 </menu>

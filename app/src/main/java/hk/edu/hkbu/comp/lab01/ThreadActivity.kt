@@ -5,6 +5,7 @@ import android.databinding.ObservableArrayList
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.webkit.WebSettings
@@ -99,7 +100,7 @@ class ThreadActivity : AppCompatActivity() {
                 binding.contentThread.executePendingBindings()
             }
         }
-
+//    Log.d("widthXXX","${getWindowManager().getDefaultDisplay().getWidth()}")
     }
 
     fun fetchThreadPosts() = GlobalScope.launch(Dispatchers.Default) {

@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        setContentView(R.layout.activity_main)
-        setTitle("偉大嘅紅登討論區")
+//        setTitle("偉大嘅紅登討論區")
 
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -99,7 +99,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 refreshThread()
                 return true
             }
-            R.id.action_settings -> return true
             else -> return super.onOptionsItemSelected(item)
         }
     }

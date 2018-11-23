@@ -23,6 +23,7 @@ import android.widget.TextView
 
 import java.util.ArrayList
 import android.Manifest.permission.READ_CONTACTS
+import android.util.Log
 import android.widget.Toast
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.AuthResult
@@ -157,7 +158,12 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
 
                 override fun onResponse(call: Call<Response<Login>>, response: retrofit2.Response<Response<Login>>) {
 //                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-//                    print(response)
+
+                    if(response.body()?.success?.equals(1)!!){
+                        Toast.makeText(this@LoginActivity, "Login Successful.", Toast.LENGTH_SHORT).show()
+                    } else{
+                        Toast.makeText(this@LoginActivity, "Login Unsuccessful.", Toast.LENGTH_SHORT).show()
+                    }
                     finish()
                 }
 
