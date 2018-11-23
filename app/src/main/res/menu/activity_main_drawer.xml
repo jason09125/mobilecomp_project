@@ -37,7 +37,7 @@
             android:icon="@drawable/ic_category_children"
             android:title="兒童台" />
         <item
-            android:id="@+id/nav_catergory_blackHole"
+            android:id="@+id/nav_catergory_blackhole"
             android:icon="@drawable/ic_category_blackhole"
             android:title="黑洞"
             />

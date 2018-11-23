@@ -130,7 +130,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.nav_catergory_children -> {
 
             }
-            R.id.nav_catergory_blackHole -> {
+            R.id.nav_catergory_blackhole -> {
 
             }
         }
