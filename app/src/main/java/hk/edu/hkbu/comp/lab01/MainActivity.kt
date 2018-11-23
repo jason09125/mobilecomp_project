@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        setContentView(R.layout.activity_main)
-//        setTitle("偉大嘅紅登討論區")
+        setTitle("偉大嘅紅登討論區")
         Log.d("mainact", current_category)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
