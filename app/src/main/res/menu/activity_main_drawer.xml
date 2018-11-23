@@ -11,7 +11,7 @@
         <item
             android:id="@+id/nav_catergory_hot"
             android:icon="@drawable/ic_category_hot"
-            android:title="熱門台" />
+            android:title="熱門" />
         <item
             android:id="@+id/nav_catergory_chat"
             android:icon="@drawable/ic_category_chat"
