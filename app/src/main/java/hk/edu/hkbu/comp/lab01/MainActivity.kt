@@ -3,7 +3,6 @@ package hk.edu.hkbu.comp.lab01
 import android.databinding.DataBindingUtil
 import android.databinding.ObservableArrayList
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
@@ -29,14 +28,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     var current_page: Int = 1
 
 
-    var current_category: String = "/latest/page/${current_page}"
+    var current_category: String = "hot/page/1"
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        setContentView(R.layout.activity_main)
 //        setTitle("偉大嘅紅登討論區")
-
+        Log.d("mainact",current_category)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
@@ -61,11 +60,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         nav_view.setNavigationItemSelectedListener(this)
 
+
         refreshThread()
     }
 
     fun refreshThread() {
-        LIHKGService.instance.getThread(this.current_category).enqueue(object : Callback<Response<ThreadList>> {
+        LIHKGService.instance.getLatestThread().enqueue(object : Callback<Response<ThreadList>> {
             override fun onFailure(call: Call<Response<ThreadList>>, t: Throwable) {
                 Log.e("MainActivity", t.message)
             }
@@ -119,34 +119,34 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 // Handle the lm action
             }
             R.id.nav_catergory_hot -> {
-                current_category = "/hot/page/${current_page}"
+                current_category = "hot/page/${current_page}"
 
             }
             R.id.nav_catergory_chat -> {
-                current_category = "/latest/page/${current_page}"
+                current_category = "latest/page/${current_page}"
 
             }
             R.id.nav_catergory_news -> {
-                current_category = "/category?cat_id=5&page=${current_page}"
+                current_category = "category?cat_id=5&page=${current_page}"
 
             }
             R.id.nav_catergory_creative -> {
-                current_category = "/category?cat_id=31&page=${current_page}"
+                current_category = "category?cat_id=31&page=${current_page}"
             }
             R.id.nav_catergory_hardware -> {
-                current_category = "/category?cat_id=22&page=${current_page}"
+                current_category = "category?cat_id=22&page=${current_page}"
 
             }
             R.id.nav_catergory_movie -> {
-                current_category = "/category?cat_id=11&page=${current_page}"
+                current_category = "category?cat_id=11&page=${current_page}"
 
             }
             R.id.nav_catergory_children -> {
-                current_category = "/category?cat_id=29&page=${current_page}"
+                current_category = "category?cat_id=29&page=${current_page}"
 
             }
             R.id.nav_catergory_blackhole -> {
-                current_category = "/category?cat_id=32&page=${current_page}"
+                current_category = "category?cat_id=32&page=${current_page}"
             }
         }
 
