@@ -18,7 +18,7 @@
             android:title="吹水台" />
         <item
             android:id="@+id/nav_catergory_news"
-            android:icon="@drawable/ic_category_news"
+            android:icon="@drawable/ic_category_academic"
             android:title="時事台" />
         <item
             android:id="@+id/nav_catergory_creative"
@@ -29,9 +29,9 @@
             android:icon="@drawable/ic_category_hardware"
             android:title="硬件台" />
         <item
-            android:id="@+id/nav_catergory_movie"
-            android:icon="@drawable/ic_category_movie"
-            android:title="影視台" />
+            android:id="@+id/nav_catergory_academic"
+            android:icon="@drawable/ic_category_academic"
+            android:title="學術台" />
         <item
             android:id="@+id/nav_catergory_children"
             android:icon="@drawable/ic_category_children"

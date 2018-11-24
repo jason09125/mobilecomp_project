@@ -28,14 +28,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     var current_page: Int = 1
 
 
-    var current_category: String = "hot/page/1"
+    //var current_category: String = "hot/page/1"
+    var current_category: Int = 1;
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        setContentView(R.layout.activity_main)
         setTitle("偉大嘅紅登討論區")
-        Log.d("mainact", current_category)
+        Log.d("mainact", current_category.toString())
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
@@ -61,11 +62,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         nav_view.setNavigationItemSelectedListener(this)
 
 
-        refreshThread(current_page)
+        refreshThread(current_category)
     }
 
-    fun refreshThread(current_page: Int) {
-        if (current_page == 1) {
+    fun refreshThread(current_category: Int) {
+        if (current_category == 1) {
             LIHKGService.instance.getLatestThread().enqueue(object : Callback<Response<ThreadList>> {
                 override fun onFailure(call: Call<Response<ThreadList>>, t: Throwable) {
                     Log.e("MainActivity", t.message)
@@ -81,7 +82,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     }
                 }
             })
-        } else if (current_page == 2) {
+        } else if (current_category == 2) {
             LIHKGService.instance.getHotPost().enqueue(object : Callback<Response<ThreadList>> {
                 override fun onFailure(call: Call<Response<ThreadList>>, t: Throwable) {
                     Log.e("MainActivity", t.message)
@@ -97,7 +98,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     }
                 }
             })
-        }else if(current_page == 5){
+        } else if (current_category == 5) {
             LIHKGService.instance.getNewsPost().enqueue(object : Callback<Response<ThreadList>> {
                 override fun onFailure(call: Call<Response<ThreadList>>, t: Throwable) {
                     Log.e("MainActivity", t.message)
@@ -113,7 +114,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     }
                 }
             })
-        }else if(current_page == 31){
+        } else if (current_category == 31) {
             LIHKGService.instance.getCreativePost().enqueue(object : Callback<Response<ThreadList>> {
                 override fun onFailure(call: Call<Response<ThreadList>>, t: Throwable) {
                     Log.e("MainActivity", t.message)
@@ -130,7 +131,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
             })
 
-        }else if(current_page == 22){
+        } else if (current_category == 22) {
             LIHKGService.instance.getHardwarePost().enqueue(object : Callback<Response<ThreadList>> {
                 override fun onFailure(call: Call<Response<ThreadList>>, t: Throwable) {
                     Log.e("MainActivity", t.message)
@@ -146,8 +147,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     }
                 }
             })
-        }else if(current_page == 11){
-            LIHKGService.instance.getMoviePost().enqueue(object : Callback<Response<ThreadList>> {
+        } else if (current_category == 18) {
+            LIHKGService.instance.getAcademicPost().enqueue(object : Callback<Response<ThreadList>> {
                 override fun onFailure(call: Call<Response<ThreadList>>, t: Throwable) {
                     Log.e("MainActivity", t.message)
                 }
@@ -162,7 +163,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     }
                 }
             })
-        }else if(current_page == 29){
+        } else if (current_category == 29) {
             LIHKGService.instance.getChildrenPost().enqueue(object : Callback<Response<ThreadList>> {
                 override fun onFailure(call: Call<Response<ThreadList>>, t: Throwable) {
                     Log.e("MainActivity", t.message)
@@ -178,7 +179,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     }
                 }
             })
-        }else if(current_page == 32){
+        } else if (current_category == 32) {
             LIHKGService.instance.getBlackHolePost().enqueue(object : Callback<Response<ThreadList>> {
                 override fun onFailure(call: Call<Response<ThreadList>>, t: Throwable) {
                     Log.e("MainActivity", t.message)
@@ -217,7 +218,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // as you specify a parent activity in AndroidManifest.xml.
         when (item.itemId) {
             R.id.action_refresh -> {
-                refreshThread(current_page)
+                refreshThread(current_category)
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
@@ -227,6 +228,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
         current_page = 1;
+        current_category = 1;
 
         when (item.itemId) {
 
@@ -234,49 +236,48 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 // Handle the lm action
             }
             R.id.nav_catergory_hot -> {
-                current_page = 2;
+                current_category = 2;
                 //current_category = "hot/page/${current_page}"
-                refreshThread(current_page)
+                refreshThread(current_category)
 
             }
             R.id.nav_catergory_chat -> {
                 //current_category = "latest/page/${current_page}"
-                current_page = 1;
-                refreshThread(current_page)
+                current_category = 1;
+                refreshThread(current_category)
 
             }
             R.id.nav_catergory_news -> {
                 //current_category = "category?cat_id=5&page=${current_page}"
-                current_page = 5;
-                refreshThread(current_page)
+                current_category = 5;
+                refreshThread(current_category)
 
             }
             R.id.nav_catergory_creative -> {
                 //current_category = "category?cat_id=31&page=${current_page}"
-                current_page = 31;
-                refreshThread(current_page)
+                current_category = 31;
+                refreshThread(current_category)
             }
             R.id.nav_catergory_hardware -> {
                 //current_category = "category?cat_id=22&page=${current_page}"
-                current_page = 22;
-                refreshThread(current_page)
+                current_category = 22;
+                refreshThread(current_category)
 
             }
-            R.id.nav_catergory_movie -> {
-                //current_category = "category?cat_id=11&page=${current_page}"
-                current_page = 11;
-                refreshThread(current_page)
+            R.id.nav_catergory_academic -> {
+                current_category = 18;
+                refreshThread(current_category)
             }
             R.id.nav_catergory_children -> {
                 //current_category = "category?cat_id=29&page=${current_page}"
-                current_page = 29;
-                refreshThread(current_page)
+                current_category = 29;
+                refreshThread(current_category)
 
             }
             R.id.nav_catergory_blackhole -> {
                 //current_category = "category?cat_id=32&page=${current_page}"
-                current_page = 32;
-                refreshThread(current_page)
+                current_category = 32;
+                refreshThread(current_category)
             }
         }
 

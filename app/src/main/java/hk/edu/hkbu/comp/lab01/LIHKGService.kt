@@ -47,7 +47,7 @@ interface LIHKGService {
     fun getHotPost(@Query("cat_id") cat_id: Int = 2): Call<Response<ThreadList>>
 
     @GET("/api_v2/thread/category?cat_id=5&page=1")
-    fun getNewsPost(@Query("cat_id") cat_id: Int = 1): Call<Response<ThreadList>>
+    fun getNewsPost(@Query("cat_id") cat_id: Int = 5): Call<Response<ThreadList>>
 
     @GET("/api_v2/thread/category?cat_id=31&page=1")
     fun getCreativePost(@Query("cat_id") cat_id: Int = 31): Call<Response<ThreadList>>
@@ -55,8 +55,8 @@ interface LIHKGService {
     @GET("/api_v2/thread/category?cat_id=22&page=1")
     fun getHardwarePost(@Query("cat_id") cat_id: Int = 22): Call<Response<ThreadList>>
 
-    @GET("/api_v2/thread/category?cat_id=11&page=1")
-    fun getMoviePost(@Query("cat_id") cat_id: Int = 11): Call<Response<ThreadList>>
+    @GET("/api_v2/thread/category?cat_id=18&page=1")
+    fun getAcademicPost(@Query("cat_id") cat_id: Int = 18): Call<Response<ThreadList>>
 
     @GET("/api_v2/thread/category?cat_id=29&page=1")
     fun getChildrenPost(@Query("cat_id") cat_id: Int = 29): Call<Response<ThreadList>>
