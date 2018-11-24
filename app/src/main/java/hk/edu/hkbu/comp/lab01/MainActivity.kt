@@ -21,6 +21,16 @@ import retrofit2.Callback
 import android.content.Intent
 import android.view.View
 import android.widget.Toast
+import java.math.BigInteger
+import java.security.MessageDigest
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+
+
+
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -30,8 +40,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
     var current_category: String = "latest/page/"
-//    var current_category: Int = 1;
+    //    var current_category: Int = 1;
     var url_header: String = "/api_v2/thread/"
+
+    var user_name: String = "Guest";
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,15 +83,161 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         Log.d("current_page", current_page.toString())
         Log.d("R.id.action_next_list-", current_category.toString())
 
- /*       if (current_category == 1) {
-            LIHKGService.instance.getLatestThread(current_page).enqueue(object : Callback<Response<ThreadList>> {
+        /*       if (current_category == 1) {
+                   LIHKGService.instance.getLatestThread(current_page).enqueue(object : Callback<Response<ThreadList>> {
+                       override fun onFailure(call: Call<Response<ThreadList>>, t: Throwable) {
+                           Log.e("MainActivity", t.message)
+                       }
+
+                       override fun onResponse(call: Call<Response<ThreadList>>, response: retrofit2.Response<Response<ThreadList>>) {
+                           if (response.isSuccessful) {
+                               Log.d("Thread:", response.body().toString())
+                               val threads = response.body()?.response?.items as List<Thread>
+                               with(binding.appBarMain.contentMain.listViewModel?.items as ObservableArrayList<Thread>) {
+                                   clear()
+                                   addAll(threads)
+                               }
+                           }
+                       }
+                   })
+               } else if (current_category == 2) {
+                   LIHKGService.instance.getHotPost().enqueue(object : Callback<Response<ThreadList>> {
+                       override fun onFailure(call: Call<Response<ThreadList>>, t: Throwable) {
+                           Log.e("MainActivity", t.message)
+                       }
+
+                       override fun onResponse(call: Call<Response<ThreadList>>, response: retrofit2.Response<Response<ThreadList>>) {
+                           if (response.isSuccessful) {
+                               val threads = response.body()?.response?.items as List<Thread>
+                               with(binding.appBarMain.contentMain.listViewModel?.items as ObservableArrayList<Thread>) {
+                                   clear()
+                                   addAll(threads)
+                               }
+                           }
+                       }
+                   })
+               }else if(current_category == 5){
+                   LIHKGService.instance.getNewsPost().enqueue(object : Callback<Response<ThreadList>> {
+                       override fun onFailure(call: Call<Response<ThreadList>>, t: Throwable) {
+                           Log.e("MainActivity", t.message)
+                       }
+
+                       override fun onResponse(call: Call<Response<ThreadList>>, response: retrofit2.Response<Response<ThreadList>>) {
+                           if (response.isSuccessful) {
+                               val threads = response.body()?.response?.items as List<Thread>
+                               with(binding.appBarMain.contentMain.listViewModel?.items as ObservableArrayList<Thread>) {
+                                   clear()
+                                   addAll(threads)
+                               }
+                           }
+                       }
+                   })
+               }else if(current_category == 31){
+                   LIHKGService.instance.getCreativePost().enqueue(object : Callback<Response<ThreadList>> {
+                       override fun onFailure(call: Call<Response<ThreadList>>, t: Throwable) {
+                           Log.e("MainActivity", t.message)
+                       }
+
+                       override fun onResponse(call: Call<Response<ThreadList>>, response: retrofit2.Response<Response<ThreadList>>) {
+                           if (response.isSuccessful) {
+                               val threads = response.body()?.response?.items as List<Thread>
+                               with(binding.appBarMain.contentMain.listViewModel?.items as ObservableArrayList<Thread>) {
+                                   clear()
+                                   addAll(threads)
+                               }
+                           }
+                       }
+                   })
+
+               }else if(current_category == 22){
+                   LIHKGService.instance.getHardwarePost().enqueue(object : Callback<Response<ThreadList>> {
+                       override fun onFailure(call: Call<Response<ThreadList>>, t: Throwable) {
+                           Log.e("MainActivity", t.message)
+                       }
+
+                       override fun onResponse(call: Call<Response<ThreadList>>, response: retrofit2.Response<Response<ThreadList>>) {
+                           if (response.isSuccessful) {
+                               val threads = response.body()?.response?.items as List<Thread>
+                               with(binding.appBarMain.contentMain.listViewModel?.items as ObservableArrayList<Thread>) {
+                                   clear()
+                                   addAll(threads)
+                               }
+                           }
+                       }
+                   })
+               } else if (current_category == 18) {
+                   LIHKGService.instance.getAcademicPost().enqueue(object : Callback<Response<ThreadList>> {
+                       override fun onFailure(call: Call<Response<ThreadList>>, t: Throwable) {
+                           Log.e("MainActivity", t.message)
+                       }
+
+                       override fun onResponse(call: Call<Response<ThreadList>>, response: retrofit2.Response<Response<ThreadList>>) {
+                           if (response.isSuccessful) {
+                               val threads = response.body()?.response?.items as List<Thread>
+                               with(binding.appBarMain.contentMain.listViewModel?.items as ObservableArrayList<Thread>) {
+                                   clear()
+                                   addAll(threads)
+                               }
+                           }
+                       }
+                   })
+               }else if(current_category == 29){
+                   LIHKGService.instance.getChildrenPost().enqueue(object : Callback<Response<ThreadList>> {
+                       override fun onFailure(call: Call<Response<ThreadList>>, t: Throwable) {
+                           Log.e("MainActivity", t.message)
+                       }
+
+                       override fun onResponse(call: Call<Response<ThreadList>>, response: retrofit2.Response<Response<ThreadList>>) {
+                           if (response.isSuccessful) {
+                               val threads = response.body()?.response?.items as List<Thread>
+                               with(binding.appBarMain.contentMain.listViewModel?.items as ObservableArrayList<Thread>) {
+                                   clear()
+                                   addAll(threads)
+                               }
+                           }
+                       }
+                   })
+               } else if (current_category == 32) {
+                   LIHKGService.instance.getBlackHolePost().enqueue(object : Callback<Response<ThreadList>> {
+                       override fun onFailure(call: Call<Response<ThreadList>>, t: Throwable) {
+                           Log.e("MainActivity", t.message)
+                       }
+
+                       override fun onResponse(call: Call<Response<ThreadList>>, response: retrofit2.Response<Response<ThreadList>>) {
+                           if (response.isSuccessful) {
+                               val threads = response.body()?.response?.items as List<Thread>
+                               with(binding.appBarMain.contentMain.listViewModel?.items as ObservableArrayList<Thread>) {
+                                   clear()
+                                   addAll(threads)
+                               }
+                           }
+                       }
+                   })
+               }*/
+        if (current_category.equals("0")) {
+            val database = FirebaseDatabase.getInstance()
+            val myRef = database.getReference("${user_name.md5()}")
+            myRef.addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    // This method is called once with the initial value and again
+                    // whenever data at this location is updated.
+                    val value = dataSnapshot.getValue(String::class.java)
+                    Log.d( "Value is: " ,value!!)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    // Failed to read value
+                    Log.w("Failed to read value.", error.toException())
+                }
+            })
+        } else {
+            LIHKGService.instance.getUrlThread(url_header + current_category + current_page).enqueue(object : Callback<Response<ThreadList>> {
                 override fun onFailure(call: Call<Response<ThreadList>>, t: Throwable) {
                     Log.e("MainActivity", t.message)
                 }
 
                 override fun onResponse(call: Call<Response<ThreadList>>, response: retrofit2.Response<Response<ThreadList>>) {
                     if (response.isSuccessful) {
-                        Log.d("Thread:", response.body().toString())
                         val threads = response.body()?.response?.items as List<Thread>
                         with(binding.appBarMain.contentMain.listViewModel?.items as ObservableArrayList<Thread>) {
                             clear()
@@ -87,146 +246,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     }
                 }
             })
-        } else if (current_category == 2) {
-            LIHKGService.instance.getHotPost().enqueue(object : Callback<Response<ThreadList>> {
-                override fun onFailure(call: Call<Response<ThreadList>>, t: Throwable) {
-                    Log.e("MainActivity", t.message)
-                }
-
-                override fun onResponse(call: Call<Response<ThreadList>>, response: retrofit2.Response<Response<ThreadList>>) {
-                    if (response.isSuccessful) {
-                        val threads = response.body()?.response?.items as List<Thread>
-                        with(binding.appBarMain.contentMain.listViewModel?.items as ObservableArrayList<Thread>) {
-                            clear()
-                            addAll(threads)
-                        }
-                    }
-                }
-            })
-        }else if(current_category == 5){
-            LIHKGService.instance.getNewsPost().enqueue(object : Callback<Response<ThreadList>> {
-                override fun onFailure(call: Call<Response<ThreadList>>, t: Throwable) {
-                    Log.e("MainActivity", t.message)
-                }
-
-                override fun onResponse(call: Call<Response<ThreadList>>, response: retrofit2.Response<Response<ThreadList>>) {
-                    if (response.isSuccessful) {
-                        val threads = response.body()?.response?.items as List<Thread>
-                        with(binding.appBarMain.contentMain.listViewModel?.items as ObservableArrayList<Thread>) {
-                            clear()
-                            addAll(threads)
-                        }
-                    }
-                }
-            })
-        }else if(current_category == 31){
-            LIHKGService.instance.getCreativePost().enqueue(object : Callback<Response<ThreadList>> {
-                override fun onFailure(call: Call<Response<ThreadList>>, t: Throwable) {
-                    Log.e("MainActivity", t.message)
-                }
-
-                override fun onResponse(call: Call<Response<ThreadList>>, response: retrofit2.Response<Response<ThreadList>>) {
-                    if (response.isSuccessful) {
-                        val threads = response.body()?.response?.items as List<Thread>
-                        with(binding.appBarMain.contentMain.listViewModel?.items as ObservableArrayList<Thread>) {
-                            clear()
-                            addAll(threads)
-                        }
-                    }
-                }
-            })
-
-        }else if(current_category == 22){
-            LIHKGService.instance.getHardwarePost().enqueue(object : Callback<Response<ThreadList>> {
-                override fun onFailure(call: Call<Response<ThreadList>>, t: Throwable) {
-                    Log.e("MainActivity", t.message)
-                }
-
-                override fun onResponse(call: Call<Response<ThreadList>>, response: retrofit2.Response<Response<ThreadList>>) {
-                    if (response.isSuccessful) {
-                        val threads = response.body()?.response?.items as List<Thread>
-                        with(binding.appBarMain.contentMain.listViewModel?.items as ObservableArrayList<Thread>) {
-                            clear()
-                            addAll(threads)
-                        }
-                    }
-                }
-            })
-        } else if (current_category == 18) {
-            LIHKGService.instance.getAcademicPost().enqueue(object : Callback<Response<ThreadList>> {
-                override fun onFailure(call: Call<Response<ThreadList>>, t: Throwable) {
-                    Log.e("MainActivity", t.message)
-                }
-
-                override fun onResponse(call: Call<Response<ThreadList>>, response: retrofit2.Response<Response<ThreadList>>) {
-                    if (response.isSuccessful) {
-                        val threads = response.body()?.response?.items as List<Thread>
-                        with(binding.appBarMain.contentMain.listViewModel?.items as ObservableArrayList<Thread>) {
-                            clear()
-                            addAll(threads)
-                        }
-                    }
-                }
-            })
-        }else if(current_category == 29){
-            LIHKGService.instance.getChildrenPost().enqueue(object : Callback<Response<ThreadList>> {
-                override fun onFailure(call: Call<Response<ThreadList>>, t: Throwable) {
-                    Log.e("MainActivity", t.message)
-                }
-
-                override fun onResponse(call: Call<Response<ThreadList>>, response: retrofit2.Response<Response<ThreadList>>) {
-                    if (response.isSuccessful) {
-                        val threads = response.body()?.response?.items as List<Thread>
-                        with(binding.appBarMain.contentMain.listViewModel?.items as ObservableArrayList<Thread>) {
-                            clear()
-                            addAll(threads)
-                        }
-                    }
-                }
-            })
-        } else if (current_category == 32) {
-            LIHKGService.instance.getBlackHolePost().enqueue(object : Callback<Response<ThreadList>> {
-                override fun onFailure(call: Call<Response<ThreadList>>, t: Throwable) {
-                    Log.e("MainActivity", t.message)
-                }
-
-                override fun onResponse(call: Call<Response<ThreadList>>, response: retrofit2.Response<Response<ThreadList>>) {
-                    if (response.isSuccessful) {
-                        val threads = response.body()?.response?.items as List<Thread>
-                        with(binding.appBarMain.contentMain.listViewModel?.items as ObservableArrayList<Thread>) {
-                            clear()
-                            addAll(threads)
-                        }
-                    }
-                }
-            })
-        }*/
-
-        LIHKGService.instance.getUrlThread(url_header+current_category+current_page).enqueue(object : Callback<Response<ThreadList>> {
-            override fun onFailure(call: Call<Response<ThreadList>>, t: Throwable) {
-                Log.e("MainActivity", t.message)
-            }
-
-            override fun onResponse(call: Call<Response<ThreadList>>, response: retrofit2.Response<Response<ThreadList>>) {
-                if (response.isSuccessful) {
-                    val threads = response.body()?.response?.items as List<Thread>
-                    with(binding.appBarMain.contentMain.listViewModel?.items as ObservableArrayList<Thread>) {
-                        clear()
-                        addAll(threads)
-                    }
-                }
-            }
-        })
+        }
     }
 
 
-    fun getNextPage(){
-        if(current_category!="hot/page/" && current_category!="latest/page/")
-        {
-            current_page+=1
-        }
-        else
-        {
+    fun getNextPage() {
+        if (current_category != "hot/page/" && current_category != "latest/page/") {
+            current_page += 1
+        } else {
             Toast.makeText(this@MainActivity, "This is the last page", Toast.LENGTH_SHORT).show()
 
         }
@@ -252,16 +279,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // as you specify a parent activity in AndroidManifest.xml.
         when (item.itemId) {
             R.id.action_refresh -> {
-                current_page=1
+                current_page = 1
                 refreshThread()
                 return true
             }
-            R.id.action_next_list->{
+            R.id.action_next_list -> {
                 getNextPage()
                 refreshThread()
                 return true
             }
-            R.id.action_next_list ->{
+            R.id.action_next_list -> {
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
@@ -276,6 +303,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             R.id.nav_catergory_lm -> {
                 // Handle the lm action
+                current_category = "0"
+                refreshThread()
             }
             R.id.nav_catergory_hot -> {
 //                current_category = 2;
@@ -327,6 +356,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
     }
+
+    fun String.md5(): String {
+        val md = MessageDigest.getInstance("MD5")
+        return BigInteger(1, md.digest(toByteArray())).toString(16).padStart(32, '0')
+    }
+
 
     fun showThreadActivity(thread: Thread) {
         with(Intent(this, ThreadActivity::class.java)) {

@@ -13,6 +13,7 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import android.widget.Toast
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import hk.edu.hkbu.comp.lab01.databinding.ActivityThreadBinding
 import hk.edu.hkbu.comp.lab01.json.Thread
 
@@ -26,12 +27,17 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import me.tatarka.bindingcollectionadapter2.ItemBinding
+import java.math.BigInteger
+import java.nio.charset.Charset
+import java.security.MessageDigest
 
 class ThreadActivity : AppCompatActivity() {
 
     lateinit var thread: Thread
     val channelPosts = Channel<List<Post>>()
     var current_page: Int = 1;
+
+    var user_name: String = "Guest";
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,10 +53,31 @@ class ThreadActivity : AppCompatActivity() {
                         startActivity(intent)
                     }
                     R.id.action_save -> {
-                        FirebaseFirestore.getInstance().collection("thread").add(thread).addOnSuccessListener {
-                            Snackbar.make(binding.root, "Thread saved", Snackbar.LENGTH_LONG)
-                                    .setAction("Done", null).show()
+                        Log.d("user_name",user_name)
+                        Log.d("user_name.md5()",user_name.md5())
+
+                        getAllThreadPosts()
+                        GlobalScope.launch(Dispatchers.Main) {
+                            repeat(thread.total_page) {
+                                binding.contentThread.posts?.addAll(channelPosts.receive())
+                                binding.contentThread.executePendingBindings()
+                            }
                         }
+
+//                            FirebaseFirestore.getInstance().collection("${user_name.md5()}").add(thread).addOnSuccessListener {
+//                            Snackbar.make(binding.root, "Thread saved", Snackbar.LENGTH_LONG)
+//                                    .setAction("Done", null).show()
+//                        }
+
+                        FirebaseStorage.getInstance().reference.child("users/${user_name.md5()}/${thread.thread_id.md5()}.json")
+                                .putBytes(thread.toString().toByteArray()).addOnSuccessListener{
+
+                                }
+
+                        current_page=1
+
+                        fetchThreadPosts()
+
                     }
                     R.id.action_next_page -> {
                         if (current_page < thread.total_page.toInt()) {
@@ -103,13 +130,35 @@ class ThreadActivity : AppCompatActivity() {
 //    Log.d("widthXXX","${getWindowManager().getDefaultDisplay().getWidth()}")
     }
 
+    fun getAllThreadPosts() = GlobalScope.launch(Dispatchers.Default) {
+        for (i in 1..thread.total_page.toInt()) {
+            launch(Dispatchers.IO) {
+                val call = LIHKGService.instance.getThreadPosts(thread.thread_id, "$i", "msg_num").execute()
+                if (call.isSuccessful) {
+                    val posts = call.body()?.response?.item_data as List<Post>
+                    channelPosts.send(posts)
+                }
+            }.join()
+        }
+    }
+
+    fun byteArrayOfInts(vararg ints: Int) = ByteArray(ints.size) { pos -> ints[pos].toByte() }
+
+
+
+    fun String.md5(): String {
+        val md = MessageDigest.getInstance("MD5")
+        return BigInteger(1, md.digest(toByteArray())).toString(16).padStart(32, '0')
+    }
+
     fun fetchThreadPosts() = GlobalScope.launch(Dispatchers.Default) {
-        //        for (i in 1..thread.total_page.toInt()) {
-        launch(Dispatchers.IO) {
-            val call = LIHKGService.instance.getThreadPosts(thread.thread_id, "$current_page", "msg_num").execute()
-            if (call.isSuccessful) {
-                val posts = call.body()?.response?.item_data as List<Post>
-                channelPosts.send(posts)
+//        for (i in 1..thread.total_page.toInt()) {
+        Log.d("fetchThreadPosts current_page", current_page.toString())
+            launch(Dispatchers.IO) {
+                val call = LIHKGService.instance.getThreadPosts(thread.thread_id, "$current_page", "msg_num").execute()
+                if (call.isSuccessful) {
+                    val posts = call.body()?.response?.item_data as List<Post>
+                    channelPosts.send(posts)
 //                }
             }
 //                        .join()
