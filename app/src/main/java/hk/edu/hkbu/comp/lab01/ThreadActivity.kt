@@ -69,7 +69,7 @@ class ThreadActivity : AppCompatActivity() {
 //                                    .setAction("Done", null).show()
 //                        }
 
-                        FirebaseStorage.getInstance().reference.child("users/${user_name.md5()}/${thread.thread_id.md5()}.json")
+                        FirebaseStorage.getInstance().reference.child("users_saved_thread/${user_name.md5()}/${thread.thread_id}.json")
                                 .putBytes(thread.toString().toByteArray()).addOnSuccessListener{
 
                                 }

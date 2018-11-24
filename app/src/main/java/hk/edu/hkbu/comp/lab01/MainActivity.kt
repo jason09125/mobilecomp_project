@@ -216,7 +216,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                }*/
         if (current_category.equals("0")) {
             val database = FirebaseDatabase.getInstance()
-            val myRef = database.getReference("${user_name.md5()}")
+            val myRef = database.getReference("users_saved_thread/${user_name.md5()}")
             myRef.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     // This method is called once with the initial value and again
