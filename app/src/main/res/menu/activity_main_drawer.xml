@@ -5,9 +5,9 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_catergory_lm"
-            android:icon="@drawable/ic_category_lm"
-            android:title="留名" />
+            android:id="@+id/nav_catergory_saved"
+            android:icon="@drawable/ic_save_post"
+            android:title="留底" />
         <item
             android:id="@+id/nav_catergory_hot"
             android:icon="@drawable/ic_category_hot"

@@ -30,8 +30,6 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
 
-
-
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     lateinit var binding: ActivityMainBinding
@@ -49,8 +47,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        setContentView(R.layout.activity_main)
-        setTitle("偉大嘅紅登討論區")
-        Log.d("mainact", current_category.toString())
+        Log.d("Current Category: ", current_category.toString())
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
@@ -222,7 +219,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     // This method is called once with the initial value and again
                     // whenever data at this location is updated.
                     val value = dataSnapshot.getValue(String::class.java)
-                    Log.d( "Value is: " ,value!!)
+                    Log.d("Value is: ", value!!)
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -238,6 +235,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
                 override fun onResponse(call: Call<Response<ThreadList>>, response: retrofit2.Response<Response<ThreadList>>) {
                     if (response.isSuccessful) {
+                        if(response.body()?.response?.category?.cat_id.equals("29")){
+                            setTitle("偉大嘅紅登討論區-兒童台")
+                        }else {
+                            setTitle("偉大嘅紅登討論區-${"${response.body()?.response?.category?.name}"}")
+                        }
                         val threads = response.body()?.response?.items as List<Thread>
                         with(binding.appBarMain.contentMain.listViewModel?.items as ObservableArrayList<Thread>) {
                             clear()
@@ -301,7 +303,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         when (item.itemId) {
 
-            R.id.nav_catergory_lm -> {
+            R.id.nav_catergory_saved -> {
                 // Handle the lm action
                 current_category = "0"
                 refreshThread()
@@ -336,7 +338,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             }
             R.id.nav_catergory_academic -> {
-                current_category = "category?cat_id=11&page="
+                current_category = "category?cat_id=18&page="
 //                current_category = 18;
                 refreshThread()
             }
