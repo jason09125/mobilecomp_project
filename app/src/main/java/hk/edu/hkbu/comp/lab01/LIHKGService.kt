@@ -40,8 +40,8 @@ interface LIHKGService {
         }
     }
 
-    @POST("/api_v2/thread/latest/page/{page}")
-    fun getLatestThread(@Path("page") current_page:Int,@Query("cat_id") cat_id: Int = 1): Call<Response<ThreadList>>
+    @POST("/api_v2/thread/latest/page/1")
+    fun getLatestThread(@Query("cat_id") cat_id: Int = 1): Call<Response<ThreadList>>
 
     @GET("/api_v2/thread/hot/page/1")
     fun getHotPost(@Query("cat_id") cat_id: Int = 2): Call<Response<ThreadList>>
