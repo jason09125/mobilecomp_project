@@ -48,14 +48,18 @@ class replyActivity : AppCompatActivity() {
 
     private fun attemptComment(): Boolean {
 
-        val comment = user_comment.text.toString()
+        val content = user_comment.text.toString()
 
         Log.d("current", thread_id)
 
-        Log.d("whatiwant", "thread_id = ${thread_id} content = ${comment} digest = ${LIHKGService.replyDigest(thread_id, comment)} userID = ${LIHKGService.getUID()} timestamp = ${LIHKGService.timestamp(true)}")
+        val digest=LIHKGService.replyDigest(thread_id, content)
+        val userId = LIHKGService.getUID()
+        val timestamp = LIHKGService.timestamp(true)
 
-        if (!comment.equals("")) {
-            LIHKGService.instance.reply(thread_id, comment, LIHKGService.replyDigest(thread_id, comment), LIHKGService.getUID(), LIHKGService.timestamp(true)).enqueue(object : retrofit2.Callback<Response<Any>> {
+        Log.d("whatiwant", "thread_id = ${thread_id} content = ${content} digest = ${digest} userID = ${userId} timestamp = ${timestamp}")
+
+        if (!content.equals("")) {
+            LIHKGService.instance.reply(thread_id, content, digest, userId, timestamp).enqueue(object : retrofit2.Callback<Response<Any>> {
                 override fun onFailure(call: Call<Response<Any>>, t: Throwable) {
 //                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
 
