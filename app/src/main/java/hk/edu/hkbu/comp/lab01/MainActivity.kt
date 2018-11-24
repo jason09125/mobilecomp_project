@@ -28,7 +28,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     var current_page: Int = 1
 
 
-    var current_category:  Int = 1
+    //var current_category: String = "hot/page/1"
+    var current_category: Int = 1;
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -150,8 +151,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     }
                 }
             })
-        }else if(current_category == 11){
-            LIHKGService.instance.getMoviePost().enqueue(object : Callback<Response<ThreadList>> {
+        } else if (current_category == 18) {
+            LIHKGService.instance.getAcademicPost().enqueue(object : Callback<Response<ThreadList>> {
                 override fun onFailure(call: Call<Response<ThreadList>>, t: Throwable) {
                     Log.e("MainActivity", t.message)
                 }
@@ -182,7 +183,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     }
                 }
             })
-        }else if(current_category == 32){
+        } else if (current_category == 32) {
             LIHKGService.instance.getBlackHolePost().enqueue(object : Callback<Response<ThreadList>> {
                 override fun onFailure(call: Call<Response<ThreadList>>, t: Throwable) {
                     Log.e("MainActivity", t.message)
@@ -232,7 +233,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             else -> return super.onOptionsItemSelected(item)
         }
-
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
