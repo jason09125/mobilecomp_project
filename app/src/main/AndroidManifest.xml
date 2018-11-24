@@ -40,8 +40,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".replyActivity"
-            android:label="@string/title_activity_reply"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:label="@string/title_activity_reply" ></activity>
     </application>
 
 </manifest>
