@@ -1,5 +1,6 @@
 package hk.edu.hkbu.comp.lab01
 
+import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.databinding.ObservableArrayList
 import android.os.Bundle
@@ -42,7 +43,8 @@ class ThreadActivity : AppCompatActivity() {
             override fun onMenuItemSelected(menuItem: MenuItem?): Boolean {
                 when (menuItem?.itemId) {
                     R.id.action_comment -> {
-
+                        val intent = Intent(this@ThreadActivity, replyActivity::class.java)
+                        startActivity(intent)
                     }
                     R.id.action_save -> {
                         FirebaseFirestore.getInstance().collection("thread").add(thread).addOnSuccessListener {
@@ -51,18 +53,16 @@ class ThreadActivity : AppCompatActivity() {
                         }
                     }
                     R.id.action_next_page -> {
-                        if (current_page < thread.total_page.toInt())
-                        {
-                            current_page+=1
+                        if (current_page < thread.total_page.toInt()) {
+                            current_page += 1
                             fetchThreadPosts()
                         } else {
                             Toast.makeText(this@ThreadActivity, "It's the last page!", Toast.LENGTH_SHORT).show()
                         }
                     }
                     R.id.action_prev_page -> {
-                        if(current_page > 1)
-                        {
-                            current_page-=1
+                        if (current_page > 1) {
+                            current_page -= 1
                             fetchThreadPosts()
                         } else {
                             Toast.makeText(this@ThreadActivity, "It's the first page!", Toast.LENGTH_SHORT).show()
@@ -92,7 +92,7 @@ class ThreadActivity : AppCompatActivity() {
         fetchThreadPosts()
 
         GlobalScope.launch(Dispatchers.Main) {
-            while(true){
+            while (true) {
                 // here to seperate the pages
                 val arr = channelPosts.receive()
                 binding.contentThread.posts?.clear()
@@ -104,12 +104,12 @@ class ThreadActivity : AppCompatActivity() {
     }
 
     fun fetchThreadPosts() = GlobalScope.launch(Dispatchers.Default) {
-//        for (i in 1..thread.total_page.toInt()) {
-            launch(Dispatchers.IO) {
-                val call = LIHKGService.instance.getThreadPosts(thread.thread_id, "$current_page", "msg_num").execute()
-                if (call.isSuccessful) {
-                    val posts = call.body()?.response?.item_data as List<Post>
-                    channelPosts.send(posts)
+        //        for (i in 1..thread.total_page.toInt()) {
+        launch(Dispatchers.IO) {
+            val call = LIHKGService.instance.getThreadPosts(thread.thread_id, "$current_page", "msg_num").execute()
+            if (call.isSuccessful) {
+                val posts = call.body()?.response?.item_data as List<Post>
+                channelPosts.send(posts)
 //                }
             }
 //                        .join()

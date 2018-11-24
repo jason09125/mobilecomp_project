@@ -33,10 +33,14 @@
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"
-            android:parentActivityName=".MainActivity"/>
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".ProfileActivity"
             android:label="@string/title_activity_profile"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".replyActivity"
+            android:label="@string/title_activity_reply"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

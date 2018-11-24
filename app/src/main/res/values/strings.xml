@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">偉大嘅紅登討論區</string>
-    <string name="app_name_short">紅燈</string>
+    <string name="app_name_short">紅登</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
@@ -34,4 +34,5 @@
     <string name="menu_save_post">Save Post</string>
     <string name="menu_prev_page">Previous page</string>
     <string name="menu_next_page">Next page</string>
+    <string name="title_activity_reply">replyActivity</string>
 </resources>
