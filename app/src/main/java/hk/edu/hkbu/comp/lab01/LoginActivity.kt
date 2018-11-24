@@ -149,7 +149,7 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
 //            mAuthTask!!.execute(null as Void?)
 
             showProgress(true)
-            LIHKGService.instance.login(emailStr, passwordStr).enqueue(object:retrofit2.Callback<Response<Login>>{
+            LIHKGService.instance.login(emailStr, passwordStr).enqueue(object : retrofit2.Callback<Response<Login>> {
                 override fun onFailure(call: Call<Response<Login>>, t: Throwable) {
 //                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                     Toast.makeText(this@LoginActivity, "Authentication failed.", Toast.LENGTH_SHORT).show()
@@ -159,9 +159,11 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
                 override fun onResponse(call: Call<Response<Login>>, response: retrofit2.Response<Response<Login>>) {
 //                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
 
-                    if(response.body()?.success?.equals(1)!!){
-                        Toast.makeText(this@LoginActivity, "Login Successful.", Toast.LENGTH_SHORT).show()
-                    } else{
+                    if (response.body()?.success?.equals(1)!!) {
+                        LIHKGService.setUserIdToken(response.body()?.response?.user?.user_id!!, response.body()?.response?.token!!)
+
+                        Toast.makeText(this@LoginActivity, "Welcome ${response.body()?.response?.user?.nickname}", Toast.LENGTH_SHORT).show()
+                    } else {
                         Toast.makeText(this@LoginActivity, "Login Unsuccessful.", Toast.LENGTH_SHORT).show()
                     }
                     finish()

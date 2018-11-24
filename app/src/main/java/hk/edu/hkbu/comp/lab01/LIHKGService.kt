@@ -28,6 +28,14 @@ interface LIHKGService {
             this.token = token
         }
 
+        fun getUID(): String{
+            return userId
+        }
+
+        fun getToken(): String{
+            return token
+        }
+
         private var currentTimestamp = ""
         fun timestamp(generateNew: Boolean = false): String {
             if (generateNew)

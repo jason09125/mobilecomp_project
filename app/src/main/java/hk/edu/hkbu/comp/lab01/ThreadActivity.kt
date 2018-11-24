@@ -49,7 +49,9 @@ class ThreadActivity : AppCompatActivity() {
             override fun onMenuItemSelected(menuItem: MenuItem?): Boolean {
                 when (menuItem?.itemId) {
                     R.id.action_comment -> {
-                        val intent = Intent(this@ThreadActivity, replyActivity::class.java)
+                        val intent = Intent(this@ThreadActivity, replyActivity::class.java).apply {
+                            putExtra("current_thread", thread.thread_id)
+                        }
                         startActivity(intent)
                     }
                     R.id.action_save -> {
