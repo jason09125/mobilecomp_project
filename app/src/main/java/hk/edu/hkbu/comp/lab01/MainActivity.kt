@@ -202,6 +202,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    fun getNextPage(){
+    }
+
     override fun onBackPressed() {
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
             drawer_layout.closeDrawer(GravityCompat.START)
@@ -229,6 +232,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             R.id.action_next_list->{
                 current_page+=1
                 refreshThread(current_category)
+                return true
+            }
+            R.id.action_next_list ->{
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
@@ -273,9 +279,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 refreshThread(current_category)
 
             }
-            R.id.nav_catergory_movie -> {
+            R.id.nav_catergory_academic -> {
                 //current_category = "category?cat_id=11&page=${current_page}"
-                current_category = 11;
+                current_category = 18;
                 refreshThread(current_category)
             }
             R.id.nav_catergory_children -> {

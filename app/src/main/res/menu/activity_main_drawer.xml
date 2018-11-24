@@ -18,7 +18,7 @@
             android:title="吹水台" />
         <item
             android:id="@+id/nav_catergory_news"
-            android:icon="@drawable/ic_category_academic"
+            android:icon="@drawable/ic_category_news"
             android:title="時事台" />
         <item
             android:id="@+id/nav_catergory_creative"
