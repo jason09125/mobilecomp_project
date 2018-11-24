@@ -20,6 +20,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import android.content.Intent
 import android.view.View
+import android.widget.Toast
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -28,9 +29,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     var current_page: Int = 1
 
 
-    //var current_category: String = "hot/page/1"
-    var current_category: Int = 1;
-
+    var current_category: String = "latest/page/"
+//    var current_category: Int = 1;
+    var url_header: String = "/api_v2/thread/"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,14 +63,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         nav_view.setNavigationItemSelectedListener(this)
 
 
-        refreshThread(current_category)
+        refreshThread()
     }
 
-    fun refreshThread(current_category: Int) {
+    fun refreshThread() {
         Log.d("current_page", current_page.toString())
         Log.d("R.id.action_next_list-", current_category.toString())
 
-        if (current_category == 1) {
+ /*       if (current_category == 1) {
             LIHKGService.instance.getLatestThread(current_page).enqueue(object : Callback<Response<ThreadList>> {
                 override fun onFailure(call: Call<Response<ThreadList>>, t: Throwable) {
                     Log.e("MainActivity", t.message)
@@ -199,10 +200,36 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     }
                 }
             })
-        }
+        }*/
+
+        LIHKGService.instance.getUrlThread(url_header+current_category+current_page).enqueue(object : Callback<Response<ThreadList>> {
+            override fun onFailure(call: Call<Response<ThreadList>>, t: Throwable) {
+                Log.e("MainActivity", t.message)
+            }
+
+            override fun onResponse(call: Call<Response<ThreadList>>, response: retrofit2.Response<Response<ThreadList>>) {
+                if (response.isSuccessful) {
+                    val threads = response.body()?.response?.items as List<Thread>
+                    with(binding.appBarMain.contentMain.listViewModel?.items as ObservableArrayList<Thread>) {
+                        clear()
+                        addAll(threads)
+                    }
+                }
+            }
+        })
     }
 
+
     fun getNextPage(){
+        if(current_category!="hot/page/" && current_category!="latest/page/")
+        {
+            current_page+=1
+        }
+        else
+        {
+            Toast.makeText(this@MainActivity, "This is the last page", Toast.LENGTH_SHORT).show()
+
+        }
     }
 
     override fun onBackPressed() {
@@ -226,12 +253,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         when (item.itemId) {
             R.id.action_refresh -> {
                 current_page=1
-                refreshThread(current_category)
+                refreshThread()
                 return true
             }
             R.id.action_next_list->{
-                current_page+=1
-                refreshThread(current_category)
+                getNextPage()
+                refreshThread()
                 return true
             }
             R.id.action_next_list ->{
@@ -243,7 +270,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
-//        current_page = 1;
+        current_page = 1;
 
         when (item.itemId) {
 
@@ -251,49 +278,49 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 // Handle the lm action
             }
             R.id.nav_catergory_hot -> {
-                current_category = 2;
-                //current_category = "hot/page/${current_page}"
-                refreshThread(current_category)
+//                current_category = 2;
+                current_category = "hot/page/"
+                refreshThread()
 
             }
             R.id.nav_catergory_chat -> {
-                //current_category = "latest/page/${current_page}"
-                current_category = 1;
-                refreshThread(current_category)
+                current_category = "latest/page/"
+//                current_category = 1;
+                refreshThread()
 
             }
             R.id.nav_catergory_news -> {
-                //current_category = "category?cat_id=5&page=${current_page}"
-                current_category = 5;
-                refreshThread(current_category)
+                current_category = "category?cat_id=5&page="
+//                current_category = 5;
+                refreshThread()
 
             }
             R.id.nav_catergory_creative -> {
-                //current_category = "category?cat_id=31&page=${current_page}"
-                current_category = 31;
-                refreshThread(current_category)
+                current_category = "category?cat_id=31&page="
+//                current_category = 31;
+                refreshThread()
             }
             R.id.nav_catergory_hardware -> {
-                //current_category = "category?cat_id=22&page=${current_page}"
-                current_category = 22;
-                refreshThread(current_category)
+                current_category = "category?cat_id=22&page="
+//                current_category = 22;
+                refreshThread()
 
             }
             R.id.nav_catergory_academic -> {
-                //current_category = "category?cat_id=11&page=${current_page}"
-                current_category = 18;
-                refreshThread(current_category)
+                current_category = "category?cat_id=11&page="
+//                current_category = 18;
+                refreshThread()
             }
             R.id.nav_catergory_children -> {
-                //current_category = "category?cat_id=29&page=${current_page}"
-                current_category = 29;
-                refreshThread(current_category)
+                current_category = "category?cat_id=29&page="
+//                current_category = 29;
+                refreshThread()
 
             }
             R.id.nav_catergory_blackhole -> {
-                //current_category = "category?cat_id=32&page=${current_page}"
-                current_category = 32;
-                refreshThread(current_category)
+                current_category = "category?cat_id=32&page="
+//                current_category = 32;
+                refreshThread()
             }
         }
 
