@@ -23,6 +23,7 @@ import android.content.Intent
 import android.support.v4.view.MotionEventCompat
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AlertDialog
+import android.text.Html
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
@@ -393,10 +394,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val builder = AlertDialog.Builder(this,R.style.AlertDialogStyle)
 
         // Set a title for alert dialog
-        builder.setTitle("WARNING")
+        builder.setTitle(Html.fromHtml("<b>"+"WARNING"+"</b>"));
 
         // Set a message for alert dialog
-        builder.setMessage("有冇人喺你隔離")
+        builder.setMessage(Html.fromHtml("<b>"+"有冇人喺你隔離"+"</b>"));
 
 
         // On click listener for dialog buttons
@@ -417,10 +418,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
         // Set the alert dialog positive/yes button
-        builder.setPositiveButton("有",dialogClickListener)
+        builder.setPositiveButton(Html.fromHtml("<b>"+"有"+"</b>"),dialogClickListener)
 
         // Set the alert dialog negative/no button
-        builder.setNegativeButton("冇",dialogClickListener)
+        builder.setNegativeButton(Html.fromHtml("<b>"+"冇"+"</b>"),dialogClickListener)
 
         // Set the alert dialog neutral/cancel button
 //        builder.setNeutralButton("CANCEL",dialogClickListener)
