@@ -404,7 +404,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val dialogClickListener = DialogInterface.OnClickListener{ _, which ->
             when(which){
                 DialogInterface.BUTTON_POSITIVE -> {
-
+                    nav_view.setCheckedItem(R.id.nav_catergory_chat)
+                    current_category="latest/page/1"
                     refreshThread()
                 }
                 DialogInterface.BUTTON_NEGATIVE -> {
