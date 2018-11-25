@@ -4,31 +4,25 @@ import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.databinding.ObservableArrayList
 import android.os.Bundle
-import android.support.design.widget.Snackbar
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.MenuItem
-import android.view.View
-import android.webkit.WebSettings
-import android.webkit.WebView
 import android.widget.Toast
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import hk.edu.hkbu.comp.lab01.databinding.ActivityThreadBinding
 import hk.edu.hkbu.comp.lab01.json.Thread
 
 import kotlinx.android.synthetic.main.activity_thread.*
-import hk.edu.hkbu.comp.lab01.databinding.*
 import hk.edu.hkbu.comp.lab01.json.Post
-import io.github.yavski.fabspeeddial.FabSpeedDial
 import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import me.tatarka.bindingcollectionadapter2.ItemBinding
 import java.math.BigInteger
-import java.nio.charset.Charset
 import java.security.MessageDigest
 
 class ThreadActivity : AppCompatActivity() {
@@ -38,6 +32,17 @@ class ThreadActivity : AppCompatActivity() {
     var current_page: Int = 1;
 
     var user_name: String = "Guest";
+
+    private val refreshThread = SwipeRefreshLayout.OnRefreshListener{
+        // 模擬加載時間
+//        Thread.sleep(200)
+        refreshThreadLayout.setProgressViewOffset(true,0,100)
+
+        fetchThreadPosts()
+        java.lang.Thread.sleep(200)
+        refreshThreadLayout.isRefreshing = false
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -119,6 +124,8 @@ class ThreadActivity : AppCompatActivity() {
         binding.contentThread.numPosts = thread.no_of_reply.toInt()
 
         fetchThreadPosts()
+        refreshThreadLayout.setOnRefreshListener(refreshThread)
+
 
         GlobalScope.launch(Dispatchers.Main) {
             while (true) {
@@ -184,5 +191,7 @@ class ThreadActivity : AppCompatActivity() {
         super.onBackPressed()
         overridePendingTransition(R.anim.parent_enter, R.anim.child_exit)
     }
+
+
 
 }

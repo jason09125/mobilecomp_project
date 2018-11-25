@@ -20,7 +20,10 @@ import kotlinx.android.synthetic.main.app_bar_main.*
 import retrofit2.Call
 import retrofit2.Callback
 import android.content.Intent
+import android.support.v4.view.MotionEventCompat
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AlertDialog
+import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
 import java.math.BigInteger
@@ -45,10 +48,25 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     var user_name: String = "Guest";
 
+    private val refreshThreadListListener = SwipeRefreshLayout.OnRefreshListener{
+        // 模擬加載時間
+//        Thread.sleep(200)
+
+       refreshThread()
+        java.lang.Thread.sleep(200)
+        refreshThreadListLayout.isRefreshing = false
+
+    }
+
+
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        setContentView(R.layout.activity_main)
+
+
         Log.d("Current Category: ", current_category.toString())
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
@@ -76,6 +94,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
         refreshThread()
+        refreshThreadListLayout.setOnRefreshListener(refreshThreadListListener)
+
     }
 
     fun refreshThread() {
@@ -238,7 +258,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 override fun onResponse(call: Call<Response<ThreadList>>, response: retrofit2.Response<Response<ThreadList>>) {
                     if (response.isSuccessful) {
                         if(response.body()?.response?.category?.cat_id.equals("29")){
-                            setTitle("偉大嘅紅登討論區-兒童台")
+                            setTitle("紅登或成為最大贏家")
                         }else {
                             setTitle("偉大嘅紅登討論區-${"${response.body()?.response?.category?.name}"}")
                         }
@@ -298,6 +318,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             else -> return super.onOptionsItemSelected(item)
         }
     }
+
+
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
