@@ -1,5 +1,6 @@
 package hk.edu.hkbu.comp.lab01
 
+import android.content.DialogInterface
 import android.databinding.DataBindingUtil
 import android.databinding.ObservableArrayList
 import android.os.Bundle
@@ -19,6 +20,7 @@ import kotlinx.android.synthetic.main.app_bar_main.*
 import retrofit2.Call
 import retrofit2.Callback
 import android.content.Intent
+import android.support.v7.app.AlertDialog
 import android.view.View
 import android.widget.Toast
 import java.math.BigInteger
@@ -343,9 +345,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 refreshThread()
             }
             R.id.nav_catergory_children -> {
-                current_category = "category?cat_id=29&page="
-//                current_category = 29;
-                refreshThread()
+//                current_category = "category?cat_id=29&page="
+////                current_category = 29;
+//                refreshThread()
+                showChildrenThread()
 
             }
             R.id.nav_catergory_blackhole -> {
@@ -357,6 +360,55 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         drawer_layout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    private fun showChildrenThread(){
+        // Late initialize an alert dialog object
+        lateinit var dialog: AlertDialog
+
+
+        // Initialize a new instance of alert dialog builder object
+        val builder = AlertDialog.Builder(this,R.style.AlertDialogStyle)
+
+        // Set a title for alert dialog
+        builder.setTitle("WARNING")
+
+        // Set a message for alert dialog
+        builder.setMessage("有冇人喺你隔離")
+
+
+        // On click listener for dialog buttons
+        val dialogClickListener = DialogInterface.OnClickListener{ _, which ->
+            when(which){
+                DialogInterface.BUTTON_POSITIVE -> {
+
+                    refreshThread()
+                }
+                DialogInterface.BUTTON_NEGATIVE -> {
+                    current_category = "category?cat_id=29&page="
+//                current_category = 29;
+                    refreshThread()
+                }
+//                DialogInterface.BUTTON_NEUTRAL -> toast("Neutral/Cancel button clicked.")
+            }
+        }
+
+
+        // Set the alert dialog positive/yes button
+        builder.setPositiveButton("有",dialogClickListener)
+
+        // Set the alert dialog negative/no button
+        builder.setNegativeButton("冇",dialogClickListener)
+
+        // Set the alert dialog neutral/cancel button
+//        builder.setNeutralButton("CANCEL",dialogClickListener)
+
+
+        // Initialize the AlertDialog using builder object
+        dialog = builder.create()
+
+        // Finally, display the alert dialog
+        dialog.show()
     }
 
     fun String.md5(): String {
