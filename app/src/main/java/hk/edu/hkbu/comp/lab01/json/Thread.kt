@@ -20,16 +20,16 @@ data class Thread(
         val reply_dislike_count: String,
         val max_reply_like_count: String,
         val max_reply_dislike_count: String,
-        val create_time: Int,
-        val last_reply_time: Int,
+        val create_time: Long,
+        val last_reply_time: Long,
         val status: String,
-        val remark: Remark,
+        val remark: Remark?,
         val last_reply_user_id: String,
         val max_reply: String,
-        val total_page: Int,
+        val total_page: Long,
         val is_adu: Boolean,
         val is_hot: Boolean,
-        val category: Category,
+        val category: Category?,
         val is_bookmarked: Boolean,
         val is_replied: Boolean,
         val user: User,
@@ -37,4 +37,6 @@ data class Thread(
         val sub_category: SubCategory?,
         val page: String? = "1",
         var item_data: List<Post>? = mutableListOf<Post>()
-) : Parcelable
+) : Parcelable {
+
+}

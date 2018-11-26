@@ -5,5 +5,5 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Remark(
-        val last_reply_count: Int
+        val last_reply_count: Long
 ) : Parcelable

@@ -12,9 +12,6 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import hk.edu.hkbu.comp.lab01.databinding.ActivityMainBinding
-import hk.edu.hkbu.comp.lab01.json.Response
-import hk.edu.hkbu.comp.lab01.json.ThreadList
-import hk.edu.hkbu.comp.lab01.json.Thread
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
 import retrofit2.Call
@@ -27,13 +24,13 @@ import android.text.Html
 import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.database.*
 import java.math.BigInteger
 import java.security.MessageDigest
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
+import hk.edu.hkbu.comp.lab01.json.*
 
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -49,18 +46,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     var user_name: String = "Guest";
 
-    private val refreshThreadListListener = SwipeRefreshLayout.OnRefreshListener{
+    private val refreshThreadListListener = SwipeRefreshLayout.OnRefreshListener {
         // 模擬加載時間
 //        Thread.sleep(200)
 
-       refreshThread()
+        refreshThread()
         java.lang.Thread.sleep(200)
         refreshThreadListLayout.isRefreshing = false
 
     }
-
-
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -235,21 +229,123 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                    })
                }*/
         if (current_category.equals("0")) {
-            val database = FirebaseDatabase.getInstance()
-            val myRef = database.getReference("users_saved_thread/${user_name.md5()}")
-            myRef.addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    // This method is called once with the initial value and again
-                    // whenever data at this location is updated.
-                    val value = dataSnapshot.getValue(String::class.java)
-                    Log.d("Value is: ", value!!)
-                }
+//            binding.appBarMain?.contentMain?.listViewModel?.items
+            Log.d("current_category", user_name.md5())
+            FirebaseFirestore.getInstance().collection(user_name.md5())
+                    .get()
+                    .addOnSuccessListener {
+                        //                        Log.d("current_category",it.toObjects(Thread::class.java).toString())
+                        with(binding.appBarMain.contentMain.listViewModel?.items as ObservableArrayList<Thread>) {
+                            clear()
+                            for (doc in it.documents) {
+                                val remark = doc["remark"] as HashMap<String, Int>
+                                val user = doc["user"] as java.util.HashMap<String, Any>
+                                val postsData = doc["item_data"] as ArrayList<HashMap<String, Any>>
 
-                override fun onCancelled(error: DatabaseError) {
-                    // Failed to read value
-                    Log.w("Failed to read value.", error.toException())
-                }
-            })
+                                val posts = mutableListOf<Post>()
+                                for (postData in postsData) {
+                                    val post_user = postData["user"] as java.util.HashMap<String, Any>
+                                    posts.add(Post(
+                                            postData["post_id"] as String,
+                                            postData["quote_post_id"] as String,
+                                            postData["thread_id"] as String,
+                                            postData["user_nickname"] as String,
+                                            postData["user_gender"] as String,
+                                            postData["like_count"] as String,
+                                            postData["dislike_count"] as String,
+                                            postData["vote_score"] as String,
+                                            postData["no_of_quote"] as String,
+                                            postData["status"] as String,
+                                            postData["reply_time"] as Long,
+                                            postData["msg"] as String,
+
+                                            User(post_user["user_id"] as String,
+                                                    post_user["nickname"] as String,
+                                                    post_user["level"] as String,
+                                                    post_user["gender"] as String,
+                                                    post_user["level"] as String,
+                                                    post_user["create_time"] as Long,
+                                                    post_user["level_name"] as String,
+                                                    post_user["_following"] as Boolean,
+                                                    post_user["_blocked"] as Boolean,
+                                                    post_user["_disappear"] as Boolean),
+                                            postData["page"] as Long,
+                                            postData["msg_num"] as Long
+                                    ))
+                                }
+
+                                add(hk.edu.hkbu.comp.lab01.json.Thread(
+
+                                        doc["thread_id"] as String,
+                                        doc["cat_id"] as String,
+                                        doc["sub_cat_id"] as String,
+                                        doc["title"] as String,
+                                        doc["user_id"] as String,
+                                        doc["user_nickname"] as String,
+                                        doc["user_gender"] as String,
+                                        doc["no_of_reply"] as String,
+                                        doc["no_of_uni_user_reply"] as String,
+                                        doc["like_count"] as String,
+                                        doc["dislike_count"] as String,
+                                        doc["reply_like_count"] as String,
+                                        doc["reply_dislike_count"] as String,
+                                        doc["max_reply_like_count"] as String,
+                                        doc["max_reply_dislike_count"] as String,
+                                        doc["create_time"] as Long,
+                                        doc["last_reply_time"] as Long,
+                                        doc["status"] as String,
+                                        Remark(remark["last_reply_count"] as Long),
+                                        doc["last_reply_user_id"] as String,
+                                        doc["max_reply"] as String,
+                                        doc["total_page"] as Long,
+                                        doc["_adu"] as Boolean,
+                                        doc["_hot"] as Boolean,
+                                        null,
+                                        doc["_bookmarked"] as Boolean,
+                                        doc["_replied"] as Boolean,
+                                        User(user["user_id"] as String,
+                                                user["nickname"] as String,
+                                                user["level"] as String,
+                                                user["gender"] as String,
+                                                user["level"] as String,
+                                                user["create_time"] as Long,
+                                                user["level_name"] as String,
+                                                user["_following"] as Boolean,
+                                                user["_blocked"] as Boolean,
+                                                user["_disappear"] as Boolean),
+                                        null,
+                                        doc["page"] as String?,
+                                        posts
+
+
+                                ))
+//                            doc["category"].
+//                            Log.d("current_category", doc.toObject(Thread::class.java).toString())
+
+                            }
+                        }
+
+                        Log.d("current_category", binding.appBarMain.contentMain.listViewModel?.items.toString())
+//                        with(binding.appBarMain.contentMain.listViewModel?.items as ObservableArrayList<Thread>) {
+//                            clear()
+//                            val threads = it.toObjects(Thread::class.java)
+//                            this.addAll(threads)
+////                            for (doc in it.toObjects()) {
+////                                this.add(doc.toObject())
+////                            }
+//                        }
+
+                    }
+
+//            (object:OnCompleteListener<QuerySnapshot>() {
+//                        if (it.isSuccessful()) {
+//                                for (QueryDocumentSnapshot document : task.getResult()) {
+//                                    Log.d(TAG, document.getId() + " => " + document.getData());
+//                                }
+//                            } else {
+//                                Log.d(TAG, "Error getting documents: ", task.getException());
+//                            }
+//              })
         } else {
             LIHKGService.instance.getUrlThread(url_header + current_category + current_page).enqueue(object : Callback<Response<ThreadList>> {
                 override fun onFailure(call: Call<Response<ThreadList>>, t: Throwable) {
@@ -258,9 +354,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
                 override fun onResponse(call: Call<Response<ThreadList>>, response: retrofit2.Response<Response<ThreadList>>) {
                     if (response.isSuccessful) {
-                        if(response.body()?.response?.category?.cat_id.equals("29")){
+                        if (response.body()?.response?.category?.cat_id.equals("29")) {
                             setTitle("紅登或成為最大贏家")
-                        }else {
+                        } else {
                             setTitle("偉大嘅紅登討論區-${"${response.body()?.response?.category?.name}"}")
                         }
                         val threads = response.body()?.response?.items as List<Thread>
@@ -319,7 +415,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             else -> return super.onOptionsItemSelected(item)
         }
     }
-
 
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -385,27 +480,27 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
-    private fun showChildrenThread(){
+    private fun showChildrenThread() {
         // Late initialize an alert dialog object
         lateinit var dialog: AlertDialog
 
 
         // Initialize a new instance of alert dialog builder object
-        val builder = AlertDialog.Builder(this,R.style.AlertDialogStyle)
+        val builder = AlertDialog.Builder(this, R.style.AlertDialogStyle)
 
         // Set a title for alert dialog
-        builder.setTitle(Html.fromHtml("<b>"+"WARNING"+"</b>"));
+        builder.setTitle(Html.fromHtml("<b>" + "WARNING" + "</b>"));
 
         // Set a message for alert dialog
-        builder.setMessage(Html.fromHtml("<b>"+"有冇人喺你隔離"+"</b>"));
+        builder.setMessage(Html.fromHtml("<b>" + "有冇人喺你隔離" + "</b>"));
 
 
         // On click listener for dialog buttons
-        val dialogClickListener = DialogInterface.OnClickListener{ _, which ->
-            when(which){
+        val dialogClickListener = DialogInterface.OnClickListener { _, which ->
+            when (which) {
                 DialogInterface.BUTTON_POSITIVE -> {
                     nav_view.setCheckedItem(R.id.nav_catergory_chat)
-                    current_category="latest/page/1"
+                    current_category = "latest/page/1"
                     refreshThread()
                 }
                 DialogInterface.BUTTON_NEGATIVE -> {
@@ -419,10 +514,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
         // Set the alert dialog positive/yes button
-        builder.setPositiveButton(Html.fromHtml("<b>"+"有"+"</b>"),dialogClickListener)
+        builder.setPositiveButton(Html.fromHtml("<b>" + "有" + "</b>"), dialogClickListener)
 
         // Set the alert dialog negative/no button
-        builder.setNegativeButton(Html.fromHtml("<b>"+"冇"+"</b>"),dialogClickListener)
+        builder.setNegativeButton(Html.fromHtml("<b>" + "冇" + "</b>"), dialogClickListener)
 
         // Set the alert dialog neutral/cancel button
 //        builder.setNeutralButton("CANCEL",dialogClickListener)
@@ -444,6 +539,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     fun showThreadActivity(thread: Thread) {
         with(Intent(this, ThreadActivity::class.java)) {
             putExtra("thread", thread)
+            putExtra("show_saved", true)
             startActivity(this)
             overridePendingTransition(R.anim.child_enter, R.anim.parent_exit)
         }

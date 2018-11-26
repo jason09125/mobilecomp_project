@@ -4,11 +4,13 @@ import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.databinding.ObservableArrayList
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import hk.edu.hkbu.comp.lab01.databinding.ActivityThreadBinding
 import hk.edu.hkbu.comp.lab01.json.Thread
@@ -65,21 +67,21 @@ class ThreadActivity : AppCompatActivity() {
 
                         getAllThreadPosts()
                         GlobalScope.launch(Dispatchers.Main) {
-                            repeat(thread.total_page) {
+                            repeat(thread.total_page.toInt()) {
                                 binding.contentThread.posts?.addAll(channelPosts.receive())
                                 binding.contentThread.executePendingBindings()
                             }
                         }
 
-//                            FirebaseFirestore.getInstance().collection("${user_name.md5()}").add(thread).addOnSuccessListener {
-//                            Snackbar.make(binding.root, "Thread saved", Snackbar.LENGTH_LONG)
-//                                    .setAction("Done", null).show()
-//                        }
+                            FirebaseFirestore.getInstance().collection("${user_name.md5()}").document("${thread.thread_id}").set(thread).addOnSuccessListener {
+                            Snackbar.make(binding.root, "Thread saved", Snackbar.LENGTH_LONG)
+                                    .setAction("Done", null).show()
+                        }
 
-                        FirebaseStorage.getInstance().reference.child("users_saved_thread/${user_name.md5()}/${thread.thread_id}.json")
-                                .putBytes(thread.toString().toByteArray()).addOnSuccessListener{
-
-                                }
+//                        FirebaseStorage.getInstance().reference.child("users_saved_thread/${user_name.md5()}/${thread.thread_id}.json")
+//                                .putBytes(thread.toString().toByteArray()).addOnSuccessListener{
+//
+//                                }
 
                         current_page=1
 
@@ -114,6 +116,10 @@ class ThreadActivity : AppCompatActivity() {
         getSupportActionBar()?.setDisplayShowHomeEnabled(true)
 
         thread = intent.extras["thread"] as Thread
+        if (intent.hasExtra("show_saved")){
+
+        }
+
         getSupportActionBar()?.setTitle(thread.title)
 
         if (thread.item_data.isNullOrEmpty())

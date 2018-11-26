@@ -14,9 +14,9 @@ data class Post(
         val vote_score: String,
         val no_of_quote: String,
         val status: String,
-        val reply_time: Int,
+        val reply_time: Long,
         val msg: String,
         val user: User,
-        val page: Int,
-        val msg_num: Int
+        val page: Long,
+        val msg_num: Long
 ) : Parcelable
