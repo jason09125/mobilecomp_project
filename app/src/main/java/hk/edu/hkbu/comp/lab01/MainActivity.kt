@@ -230,8 +230,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                }*/
         if (current_category.equals("0")) {
 //            binding.appBarMain?.contentMain?.listViewModel?.items
-            Log.d("current_category", user_name.md5())
-            FirebaseFirestore.getInstance().collection(user_name.md5())
+            Log.d("current_category", sha512(user_name))
+            FirebaseFirestore.getInstance().collection(sha512(user_name))
                     .get()
                     .addOnSuccessListener {
                         //                        Log.d("current_category",it.toObjects(Thread::class.java).toString())
@@ -530,9 +530,37 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         dialog.show()
     }
 
-    fun String.md5(): String {
-        val md = MessageDigest.getInstance("MD5")
-        return BigInteger(1, md.digest(toByteArray())).toString(16).padStart(32, '0')
+//    fun String.md5(): String {
+//        val md = MessageDigest.getInstance("MD5")
+//        return BigInteger(1, md.digest(toByteArray())).toString(16).padStart(32, '0')
+//    }
+
+    fun sha512(input: String): String {
+        val digest = MessageDigest.getInstance("SHA-512")
+        val result = digest.digest(input.toByteArray())
+        return toHex(result)
+    }
+
+    fun toHex(byteArray: ByteArray): String {
+
+        val result = with(StringBuilder()) {
+            byteArray.forEach {
+                val value = it
+                val hex = value.toInt() and (0xFF)
+                val hexStr = Integer.toHexString(hex)
+                //println(hexStr)
+                if (hexStr.length == 1) {
+                    //this.append("0").append(hexStr)
+                    append("0").append(hexStr)
+                } else {
+                    //this.append(hexStr)
+                    append(hexStr)
+                }
+            }
+            this.toString()
+        }
+        return result
+
     }
 
 

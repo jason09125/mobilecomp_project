@@ -11,20 +11,17 @@ import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
 import hk.edu.hkbu.comp.lab01.databinding.ActivityThreadBinding
 import hk.edu.hkbu.comp.lab01.json.Thread
 
 import kotlinx.android.synthetic.main.activity_thread.*
 import hk.edu.hkbu.comp.lab01.json.Post
 import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import me.tatarka.bindingcollectionadapter2.ItemBinding
-import java.math.BigInteger
 import java.security.MessageDigest
 
 class ThreadActivity : AppCompatActivity() {
@@ -63,7 +60,7 @@ class ThreadActivity : AppCompatActivity() {
                     }
                     R.id.action_save -> {
                         Log.d("user_name",user_name)
-                        Log.d("user_name.md5()",user_name.md5())
+                        Log.d("sha512(user_name)",sha512(user_name))
 
                         getAllThreadPosts()
                         GlobalScope.launch(Dispatchers.Main) {
@@ -73,7 +70,7 @@ class ThreadActivity : AppCompatActivity() {
                             }
                         }
 
-                            FirebaseFirestore.getInstance().collection("${user_name.md5()}").document("${thread.thread_id}").set(thread).addOnSuccessListener {
+                            FirebaseFirestore.getInstance().collection("${sha512(user_name)}").document("${thread.thread_id}").set(thread).addOnSuccessListener {
                             Snackbar.make(binding.root, "Thread saved", Snackbar.LENGTH_LONG)
                                     .setAction("Done", null).show()
                         }
@@ -160,10 +157,38 @@ class ThreadActivity : AppCompatActivity() {
     fun byteArrayOfInts(vararg ints: Int) = ByteArray(ints.size) { pos -> ints[pos].toByte() }
 
 
+//
+//    fun String.md5(): String {
+//        val md = MessageDigest.getInstance("MD5")
+//        return BigInteger(1, md.digest(toByteArray())).toString(16).padStart(32, '0')
+//    }
 
-    fun String.md5(): String {
-        val md = MessageDigest.getInstance("MD5")
-        return BigInteger(1, md.digest(toByteArray())).toString(16).padStart(32, '0')
+    fun sha512(input: String): String {
+        val digest = MessageDigest.getInstance("SHA-512")
+        val result = digest.digest(input.toByteArray())
+        return toHex(result)
+    }
+
+    fun toHex(byteArray: ByteArray): String {
+
+        val result = with(StringBuilder()) {
+            byteArray.forEach {
+                val value = it
+                val hex = value.toInt() and (0xFF)
+                val hexStr = Integer.toHexString(hex)
+                //println(hexStr)
+                if (hexStr.length == 1) {
+                    //this.append("0").append(hexStr)
+                    append("0").append(hexStr)
+                } else {
+                    //this.append(hexStr)
+                    append(hexStr)
+                }
+            }
+            this.toString()
+        }
+        return result
+
     }
 
     fun fetchThreadPosts() = GlobalScope.launch(Dispatchers.Default) {
