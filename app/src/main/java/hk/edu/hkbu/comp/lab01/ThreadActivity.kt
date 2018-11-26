@@ -16,6 +16,8 @@ import hk.edu.hkbu.comp.lab01.json.Thread
 
 import kotlinx.android.synthetic.main.activity_thread.*
 import hk.edu.hkbu.comp.lab01.json.Post
+import hk.edu.hkbu.comp.lab01.json.Remark
+import hk.edu.hkbu.comp.lab01.json.User
 import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -59,8 +61,8 @@ class ThreadActivity : AppCompatActivity() {
                         startActivity(intent)
                     }
                     R.id.action_save -> {
-                        Log.d("user_name",user_name)
-                        Log.d("sha512(user_name)",sha512(user_name))
+                        Log.d("user_name", user_name)
+                        Log.d("sha512(user_name)", sha512(user_name))
 
                         getAllThreadPosts()
                         GlobalScope.launch(Dispatchers.Main) {
@@ -70,7 +72,7 @@ class ThreadActivity : AppCompatActivity() {
                             }
                         }
 
-                            FirebaseFirestore.getInstance().collection("${sha512(user_name)}").document("${thread.thread_id}").set(thread).addOnSuccessListener {
+                        FirebaseFirestore.getInstance().collection("${sha512(user_name)}").document("${thread.thread_id}").set(thread).addOnSuccessListener {
                             Snackbar.make(binding.root, "Thread saved", Snackbar.LENGTH_LONG)
                                     .setAction("Done", null).show()
                         }
@@ -80,7 +82,7 @@ class ThreadActivity : AppCompatActivity() {
 //
 //                                }
 
-                        current_page=1
+                        current_page = 1
 
                         fetchThreadPosts()
 
@@ -113,33 +115,95 @@ class ThreadActivity : AppCompatActivity() {
         getSupportActionBar()?.setDisplayShowHomeEnabled(true)
 
         thread = intent.extras["thread"] as Thread
-        if (intent.hasExtra("show_saved")){
-
-        }
-
-        getSupportActionBar()?.setTitle(thread.title)
-
-        if (thread.item_data.isNullOrEmpty())
-            thread.item_data = ObservableArrayList<Post>()
-
-        binding.contentThread.itemBinding = ItemBinding.of<Post>(BR.post, R.layout.content_thread_item)
-        binding.contentThread.posts = thread.item_data as? ObservableArrayList<Post>
         binding.contentThread.numPosts = thread.no_of_reply.toInt()
 
-        fetchThreadPosts()
-        refreshThreadLayout.setOnRefreshListener(refreshThread)
+//        Log.d("onCreate",thread.thread_id)
 
-
-        GlobalScope.launch(Dispatchers.Main) {
-            while (true) {
-                // here to seperate the pages
-                val arr = channelPosts.receive()
-                binding.contentThread.posts?.clear()
-                binding.contentThread.posts?.addAll(arr)
-                binding.contentThread.executePendingBindings()
-            }
+        if (binding.contentThread.posts.isNullOrEmpty()) {
+            binding.contentThread.posts = ObservableArrayList<Post>()
         }
+        binding.contentThread.itemBinding = ItemBinding.of<Post>(BR.post, R.layout.content_thread_item)
+        getSupportActionBar()?.setTitle(thread.title)
+
+        if (intent.hasExtra("show_saved")) {
+            FirebaseFirestore.getInstance().collection(sha512(user_name)).document("${thread.thread_id}")
+                    .get()
+                    .addOnSuccessListener {
+                        //                        for (postData in it) {
+//                        for (doc in it.documents) {
+                        val remark = it["remark"] as HashMap<String, Int>
+                        val user = it["user"] as java.util.HashMap<String, Any>
+                        val postsData = it["item_data"] as ArrayList<HashMap<String, Any>>
+
+                        binding.contentThread.posts.let {
+                            for (postData in postsData) {
+                                val post_user = postData["user"] as java.util.HashMap<String, Any>
+                                it?.add(Post(
+                                postData["post_id"] as String,
+                                postData["quote_post_id"] as String,
+                                postData["thread_id"] as String,
+                                postData["user_nickname"] as String,
+                                postData["user_gender"] as String,
+                                postData["like_count"] as String,
+                                postData["dislike_count"] as String,
+                                postData["vote_score"] as String,
+                                postData["no_of_quote"] as String,
+                                postData["status"] as String,
+                                postData["reply_time"] as Long,
+                                postData["msg"] as String,
+
+                                User(post_user["user_id"] as String,
+                                        post_user["nickname"] as String,
+                                        post_user["level"] as String,
+                                        post_user["gender"] as String,
+                                        post_user["level"] as String,
+                                        post_user["create_time"] as Long,
+                                        post_user["level_name"] as String,
+                                        post_user["_following"] as Boolean,
+                                        post_user["_blocked"] as Boolean,
+                                        post_user["_disappear"] as Boolean),
+                                postData["page"] as Long,
+                                postData["msg_num"] as Long
+                                ))
+                            }
+
+//                        binding.contentThread.posts = posts as? ObservableArrayList<Post>
+
+
+//                            doc["category"].
+//                            Log.d("current_category", doc.toObject(Thread::class.java).toString())
+
+//                        }
+                        }
+
+                    }
+
+        } else {
+
+            getSupportActionBar()?.setTitle(thread.title)
+
+            if (thread.item_data.isNullOrEmpty())
+                thread.item_data = ObservableArrayList<Post>()
+
+            binding.contentThread.itemBinding = ItemBinding.of<Post>(BR.post, R.layout.content_thread_item)
+            binding.contentThread.posts = thread.item_data as? ObservableArrayList<Post>
+            binding.contentThread.numPosts = thread.no_of_reply.toInt()
+
+            fetchThreadPosts()
+            refreshThreadLayout.setOnRefreshListener(refreshThread)
+
+
+            GlobalScope.launch(Dispatchers.Main) {
+                while (true) {
+                    // here to seperate the pages
+                    val arr = channelPosts.receive()
+                    binding.contentThread.posts?.clear()
+                    binding.contentThread.posts?.addAll(arr)
+                    binding.contentThread.executePendingBindings()
+                }
+            }
 //    Log.d("widthXXX","${getWindowManager().getDefaultDisplay().getWidth()}")
+        }
     }
 
     fun getAllThreadPosts() = GlobalScope.launch(Dispatchers.Default) {
@@ -193,6 +257,7 @@ class ThreadActivity : AppCompatActivity() {
 
     fun fetchThreadPosts() = GlobalScope.launch(Dispatchers.Default) {
 //        for (i in 1..thread.total_page.toInt()) {
+
         Log.d("fetchThreadPosts current_page", current_page.toString())
             launch(Dispatchers.IO) {
                 val call = LIHKGService.instance.getThreadPosts(thread.thread_id, "$current_page", "msg_num").execute()

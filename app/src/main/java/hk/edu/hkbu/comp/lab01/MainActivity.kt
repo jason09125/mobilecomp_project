@@ -567,19 +567,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     fun showThreadActivity(thread: Thread) {
         with(Intent(this, ThreadActivity::class.java)) {
             putExtra("thread", thread)
-            putExtra("show_saved", true)
+            if(current_category.equals("0")) {
+                putExtra("show_saved", true)
+            }
             startActivity(this)
             overridePendingTransition(R.anim.child_enter, R.anim.parent_exit)
         }
     }
 
-    fun showPostActivity(thread: Thread) {
-        with(Intent(this, ThreadActivity::class.java)) {
-            putExtra("thread", thread)
-            startActivity(this)
-            overridePendingTransition(R.anim.child_enter, R.anim.parent_exit)
-        }
-    }
 
     fun showProfileActivity(view: View) {
 
