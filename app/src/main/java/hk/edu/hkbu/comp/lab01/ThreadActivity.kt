@@ -35,10 +35,10 @@ class ThreadActivity : AppCompatActivity() {
 
     var user_name: String = LIHKGService.user_name.toString();
 
-    private val refreshThread = SwipeRefreshLayout.OnRefreshListener{
+    private val refreshThread = SwipeRefreshLayout.OnRefreshListener {
         // 模擬加載時間
 //        Thread.sleep(200)
-        refreshThreadLayout.setProgressViewOffset(true,0,100)
+        refreshThreadLayout.setProgressViewOffset(true, 0, 100)
 
         fetchThreadPosts()
         java.lang.Thread.sleep(200)
@@ -56,7 +56,7 @@ class ThreadActivity : AppCompatActivity() {
                 when (menuItem?.itemId) {
                     R.id.action_comment -> {
 
-                        if(LIHKGService.get_login_check()){
+                        if (LIHKGService.get_login_check()) {
                             val intent = Intent(this@ThreadActivity, replyActivity::class.java).apply {
                                 putExtra("current_thread", thread.thread_id)
                             }
@@ -92,23 +92,54 @@ class ThreadActivity : AppCompatActivity() {
 //                        }
 
 
-
                         GlobalScope.launch(Dispatchers.Main) {
-                            val saving_thread = thread
+                            val saving_thread: Thread = thread
                             val threads = ArrayList<Post>()
-                            repeat(saving_thread.total_page.toInt()) {
-                                Snackbar.make(binding.root,"!!!!!!!!!!!!!!!!!!!!!!!!!!!!",Snackbar.LENGTH_LONG)
-                                threads.addAll(channelPosts.receive())
-//                                binding.contentThread.posts?.addAll(channelPosts.receive())
-//                                binding.contentThread.executePendingBindings()
+//                            getAllThreadPosts()
+//                            repeat(saving_thread.total_page.toInt()) {
+//                                Snackbar.make(binding.root, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!", Snackbar.LENGTH_LONG)
+//                                threads.addAll(channelPosts.receive())
+////                                binding.contentThread.posts?.addAll(channelPosts.receive())
+////                                binding.contentThread.executePendingBindings()
+//
+//                            }
+//                            saving_thread.item_data = threads
+                            Log.d("getAllThreadPosts", thread.thread_id)
 
+                            for (i in 1..thread.total_page.toInt()) {
+                                launch(Dispatchers.IO) {
+                                    val call = LIHKGService.instance.getThreadPosts(thread.thread_id, "$i", "msg_num").execute()
+                                    if (call.isSuccessful) {
+                                        val posts = call.body()?.response?.item_data as List<Post>
+                                        channelPosts.send(posts)
+                                    }
+                                }.join()
                             }
+                            Log.d("thread.total_page.toInt()", thread.total_page.toInt().toString())
+                            repeat(thread.total_page.toInt()) {
+//                                Snackbar.make(binding.root, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!", Snackbar.LENGTH_LONG)
+                                Log.d("inside_repeat","inside_repeat")
+                                val data = channelPosts.receive()
+                                Log.d("data", data.toString())
+                                threads.addAll(data)
+                                binding.contentThread.posts?.addAll(data)
+                                binding.contentThread.executePendingBindings()
+                            }
+                            Log.d("saving_thread", saving_thread.toString())
+                            Log.d("threads.size", threads.size.toString())
+
                             saving_thread.item_data = threads
-                            Log.d("save threads", threads.toString())
-                            FirebaseFirestore.getInstance().collection("${sha512(user_name)}").document("${saving_thread.thread_id}").set(saving_thread).addOnSuccessListener {
-                                Snackbar.make(binding.root, "Thread saved", Snackbar.LENGTH_LONG)
-                                        .setAction("Done", null).show()
-                            }
+
+
+                            FirebaseFirestore.getInstance().collection("${sha512(user_name)}")
+                                    .document("${saving_thread.thread_id}")
+                                    .set(saving_thread)
+                                    .addOnSuccessListener {
+                                        Log.d("FirebaseFirestore", saving_thread.toString())
+                                        Snackbar.make(binding.root, "Thread saved", Snackbar.LENGTH_LONG)
+                                                .setAction("Done", null).show()
+                                        fetchThreadPosts()
+                                    }
                         }
 
 //                        FirebaseStorage.getInstance().reference.child("users_saved_thread/${user_name.md5()}/${thread.thread_id}.json")
@@ -171,36 +202,44 @@ class ThreadActivity : AppCompatActivity() {
                         val user = it["user"] as java.util.HashMap<String, Any>
                         val postsData = it["item_data"] as ArrayList<HashMap<String, Any>>
 
+                        if (thread.item_data.isNullOrEmpty())
+                            thread.item_data = ObservableArrayList<Post>()
+
                         binding.contentThread.posts.let {
+                            var count : Int = 0
                             for (postData in postsData) {
+                                count ++
                                 val post_user = postData["user"] as java.util.HashMap<String, Any>
                                 it?.add(Post(
-                                postData["post_id"] as String,
-                                postData["quote_post_id"] as String,
-                                postData["thread_id"] as String,
-                                postData["user_nickname"] as String,
-                                postData["user_gender"] as String,
-                                postData["like_count"] as String,
-                                postData["dislike_count"] as String,
-                                postData["vote_score"] as String,
-                                postData["no_of_quote"] as String,
-                                postData["status"] as String,
-                                postData["reply_time"] as Long,
-                                postData["msg"] as String,
+                                        postData["post_id"] as String,
+                                        postData["quote_post_id"] as String,
+                                        postData["thread_id"] as String,
+                                        postData["user_nickname"] as String,
+                                        postData["user_gender"] as String,
+                                        postData["like_count"] as String,
+                                        postData["dislike_count"] as String,
+                                        postData["vote_score"] as String,
+                                        postData["no_of_quote"] as String,
+                                        postData["status"] as String,
+                                        postData["reply_time"] as Long,
+                                        postData["msg"] as String,
 
-                                User(post_user["user_id"] as String,
-                                        post_user["nickname"] as String,
-                                        post_user["level"] as String,
-                                        post_user["gender"] as String,
-                                        post_user["level"] as String,
-                                        post_user["create_time"] as Long,
-                                        post_user["level_name"] as String,
-                                        post_user["_following"] as Boolean,
-                                        post_user["_blocked"] as Boolean,
-                                        post_user["_disappear"] as Boolean),
-                                postData["page"] as Long,
-                                postData["msg_num"] as Long
+                                        User(post_user["user_id"] as String,
+                                                post_user["nickname"] as String,
+                                                post_user["level"] as String,
+                                                post_user["gender"] as String,
+                                                post_user["level"] as String,
+                                                post_user["create_time"] as Long,
+                                                post_user["level_name"] as String,
+                                                post_user["_following"] as Boolean,
+                                                post_user["_blocked"] as Boolean,
+                                                post_user["_disappear"] as Boolean),
+                                        postData["page"] as Long,
+                                        postData["msg_num"] as Long
                                 ))
+                                Log.d("postData", postData.toString())
+                                Log.d("postData", count.toString())
+
                             }
 
 //                        binding.contentThread.posts = posts as? ObservableArrayList<Post>
@@ -242,17 +281,6 @@ class ThreadActivity : AppCompatActivity() {
         }
     }
 
-    fun getAllThreadPosts() = GlobalScope.launch(Dispatchers.Default) {
-        for (i in 1..thread.total_page.toInt()) {
-            launch(Dispatchers.IO) {
-                val call = LIHKGService.instance.getThreadPosts(thread.thread_id, "$i", "msg_num").execute()
-                if (call.isSuccessful) {
-                    val posts = call.body()?.response?.item_data as List<Post>
-                    channelPosts.send(posts)
-                }
-            }.join()
-        }
-    }
 
     fun byteArrayOfInts(vararg ints: Int) = ByteArray(ints.size) { pos -> ints[pos].toByte() }
 
@@ -292,17 +320,32 @@ class ThreadActivity : AppCompatActivity() {
     }
 
     fun fetchThreadPosts() = GlobalScope.launch(Dispatchers.Default) {
-//        for (i in 1..thread.total_page.toInt()) {
+        //        for (i in 1..thread.total_page.toInt()) {
 
-        Log.d("fetchThreadPosts current_page", current_page.toString())
+            Log.d("fetchThreadPosts current_page", current_page.toString())
             launch(Dispatchers.IO) {
                 val call = LIHKGService.instance.getThreadPosts(thread.thread_id, "$current_page", "msg_num").execute()
                 if (call.isSuccessful) {
                     val posts = call.body()?.response?.item_data as List<Post>
                     channelPosts.send(posts)
 //                }
-            }
+                }
 //                        .join()
+            }
+
+    }
+
+    fun getAllThreadPosts() = GlobalScope.launch(Dispatchers.Default) {
+        Log.d("getAllThreadPosts", thread.thread_id)
+
+        for (i in 1..thread.total_page.toInt()) {
+            launch(Dispatchers.IO) {
+                val call = LIHKGService.instance.getThreadPosts(thread.thread_id, "$i", "msg_num").execute()
+                if (call.isSuccessful) {
+                    val posts = call.body()?.response?.item_data as List<Post>
+                    channelPosts.send(posts)
+                }
+            }.join()
         }
     }
 
@@ -323,7 +366,6 @@ class ThreadActivity : AppCompatActivity() {
         super.onBackPressed()
         overridePendingTransition(R.anim.parent_enter, R.anim.child_exit)
     }
-
 
 
 }
