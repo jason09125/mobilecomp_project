@@ -32,7 +32,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    kotlinOptions{
+    kotlinOptions {
         jvmTarget = '1.8'
     }
 }
@@ -63,5 +63,8 @@ dependencies {
     implementation 'io.github.yavski:fab-speed-dial:1.0.6'
     implementation 'com.google.firebase:firebase-storage:11.8.0'
     implementation 'com.google.firebase:firebase-database:11.8.0'
+    //gif
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.1'
 }
+
 apply plugin: 'com.google.gms.google-services'
