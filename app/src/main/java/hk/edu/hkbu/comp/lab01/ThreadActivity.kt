@@ -33,7 +33,7 @@ class ThreadActivity : AppCompatActivity() {
     val channelPosts = Channel<List<Post>>()
     var current_page: Int = 1;
 
-    var user_name: String = "Guest";
+    var user_name: String = LIHKGService.user_name.toString();
 
     private val refreshThread = SwipeRefreshLayout.OnRefreshListener{
         // 模擬加載時間
@@ -51,15 +51,20 @@ class ThreadActivity : AppCompatActivity() {
         var binding: ActivityThreadBinding = DataBindingUtil.setContentView(this, R.layout.activity_thread)
         setSupportActionBar(toolbar)
 
-        // original fab function
         binding.fabMenu.setMenuListener(object : SimpleMenuListenerAdapter() {
             override fun onMenuItemSelected(menuItem: MenuItem?): Boolean {
                 when (menuItem?.itemId) {
                     R.id.action_comment -> {
-                        val intent = Intent(this@ThreadActivity, replyActivity::class.java).apply {
-                            putExtra("current_thread", thread.thread_id)
+
+                        if(LIHKGService.get_login_check()){
+                            val intent = Intent(this@ThreadActivity, replyActivity::class.java).apply {
+                                putExtra("current_thread", thread.thread_id)
+                            }
+                            startActivity(intent)
+                        } else {
+                            Toast.makeText(this@ThreadActivity, "未登入學咩人留言", Toast.LENGTH_LONG).show()
                         }
-                        startActivity(intent)
+
                     }
                     R.id.action_save -> {
                         Log.d("user_name", user_name)

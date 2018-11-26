@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log
 import android.view.inputmethod.EditorInfo
@@ -32,7 +33,7 @@ class replyActivity : AppCompatActivity() {
 
         Log.d("thread_ID", thread_id)
 
-        Toast.makeText(this@replyActivity, "${LIHKGService.getUID()} and ${LIHKGService.getToken()}", Toast.LENGTH_LONG).show()
+//        Toast.makeText(this@replyActivity, "${LIHKGService.getUID()} and ${LIHKGService.getToken()}", Toast.LENGTH_LONG).show()
 
         fab.setOnClickListener { view ->
 
@@ -44,6 +45,14 @@ class replyActivity : AppCompatActivity() {
             }
 
         }
+
+//        bottomNavigation.setOnNavigationItemSelectedListener { item ->
+//            when (item.itemId) {
+//                R.id.action_link -> {
+//                }
+//            }
+//            return true
+//        }
     }
 
     private fun attemptComment(): Boolean {
@@ -72,9 +81,9 @@ class replyActivity : AppCompatActivity() {
 
 //                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                     if (response.body()?.success?.equals(1)!!) {
-                        Toast.makeText(this@replyActivity, "success = 1", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@replyActivity, "Commented.", Toast.LENGTH_SHORT).show()
                     } else {
-                        Toast.makeText(this@replyActivity, "success = 0", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@replyActivity, "Failed to comment.", Toast.LENGTH_SHORT).show()
                     }
                 }
 

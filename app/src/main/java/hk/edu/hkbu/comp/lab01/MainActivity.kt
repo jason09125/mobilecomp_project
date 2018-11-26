@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.app_bar_main.*
 import retrofit2.Call
 import retrofit2.Callback
 import android.content.Intent
+import android.databinding.ViewDataBinding
 import android.support.v4.view.MotionEventCompat
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AlertDialog
@@ -44,7 +45,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     //    var current_category: Int = 1;
     var url_header: String = "/api_v2/thread/"
 
-    var user_name: String = "Guest";
+    var user_name: String = LIHKGService.user_name.toString()
 
     private val refreshThreadListListener = SwipeRefreshLayout.OnRefreshListener {
         // 模擬加載時間
@@ -69,6 +70,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         binding.appBarMain?.contentMain?.centerText = "Mayanne: I love U"
 
         binding.appBarMain?.contentMain?.listViewModel = ListViewModel<Thread>(BR.threadItem, R.layout.content_main_item)
+
+        val navViewBinding = DataBindingUtil.inflate<ViewDataBinding>(layoutInflater, R.layout.nav_header_main, binding.navView, false)
+        binding.navView.addHeaderView(navViewBinding.root)
 
         setSupportActionBar(toolbar)
 

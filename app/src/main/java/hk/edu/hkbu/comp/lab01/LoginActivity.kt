@@ -162,6 +162,9 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
                     if (response.body()?.success?.equals(1)!!) {
                         LIHKGService.setUserIdToken(response.body()?.response?.user?.user_id!!, response.body()?.response?.token!!)
 
+                        LIHKGService.user_name.set(response.body()?.response?.user?.nickname)
+                        LIHKGService.set_login_check(true)
+
                         Toast.makeText(this@LoginActivity, "Welcome ${response.body()?.response?.user?.nickname}", Toast.LENGTH_SHORT).show()
                     } else {
                         Toast.makeText(this@LoginActivity, "Login Unsuccessful.", Toast.LENGTH_SHORT).show()

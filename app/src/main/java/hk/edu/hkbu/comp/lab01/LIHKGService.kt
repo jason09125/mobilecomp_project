@@ -1,5 +1,6 @@
 package hk.edu.hkbu.comp.lab01
 
+import android.databinding.ObservableField
 import android.util.Log
 import com.google.common.hash.Hashing
 import hk.edu.hkbu.comp.lab01.json.Login
@@ -13,6 +14,7 @@ import retrofit2.http.*
 import java.nio.charset.Charset
 
 interface LIHKGService {
+
     companion object {
         val instance: LIHKGService by lazy {
             Retrofit.Builder()
@@ -20,6 +22,23 @@ interface LIHKGService {
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
                     .create(LIHKGService::class.java)
+        }
+
+        @JvmStatic val user_name = ObservableField<String>("Guest")
+//        user_name.set()
+
+        private var login_check = false
+
+        fun get_login_check (): Boolean{
+            return this.login_check
+        }
+
+        fun set_login_check (input:Boolean){
+            if(input){
+                this.login_check = true
+            } else {
+                this.login_check = false
+            }
         }
 
         private var userId = ""

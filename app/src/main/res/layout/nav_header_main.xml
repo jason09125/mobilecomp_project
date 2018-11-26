@@ -3,8 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <import type="com.google.firebase.auth.FirebaseAuth" />
+        <import type="hk.edu.hkbu.comp.lab01.LIHKGService" />
+        <variable
+            name="username"
+            type="android.databinding.ObservableField&lt;String>" />
     </data>
 
     <LinearLayout
@@ -34,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/nav_header_vertical_spacing"
-            android:text='@{FirebaseAuth.instance.currentUser == null ? "" : FirebaseAuth.instance.currentUser.displayName}'
+            android:text='@{LIHKGService.user_name}'
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:textColor="@color/motherlandyellow" />
 
