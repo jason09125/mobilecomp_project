@@ -229,6 +229,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                    })
                }*/
         if (current_category.equals("0")) {
+                setTitle("厲害了我的紅登 留底")
+            fab.hide()
+
 //            binding.appBarMain?.contentMain?.listViewModel?.items
             Log.d("current_category", sha512(user_name))
             FirebaseFirestore.getInstance().collection(sha512(user_name))
@@ -347,6 +350,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 //                            }
 //              })
         } else {
+            fab.show()
             LIHKGService.instance.getUrlThread(url_header + current_category + current_page).enqueue(object : Callback<Response<ThreadList>> {
                 override fun onFailure(call: Call<Response<ThreadList>>, t: Throwable) {
                     Log.e("MainActivity", t.message)

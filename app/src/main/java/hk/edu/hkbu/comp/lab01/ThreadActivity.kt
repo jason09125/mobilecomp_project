@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import hk.edu.hkbu.comp.lab01.databinding.ActivityThreadBinding
 import hk.edu.hkbu.comp.lab01.json.Thread
 
@@ -64,27 +65,55 @@ class ThreadActivity : AppCompatActivity() {
                         Log.d("user_name", user_name)
                         Log.d("sha512(user_name)", sha512(user_name))
 
-                        getAllThreadPosts()
-                        GlobalScope.launch(Dispatchers.Main) {
-                            repeat(thread.total_page.toInt()) {
-                                binding.contentThread.posts?.addAll(channelPosts.receive())
-                                binding.contentThread.executePendingBindings()
-                            }
-                        }
 
-                        FirebaseFirestore.getInstance().collection("${sha512(user_name)}").document("${thread.thread_id}").set(thread).addOnSuccessListener {
-                            Snackbar.make(binding.root, "Thread saved", Snackbar.LENGTH_LONG)
-                                    .setAction("Done", null).show()
+//                        GlobalScope.launch(Dispatchers.Main) {
+//                            getAllThreadPosts()
+//
+//                            val threads = ArrayList<Post>()
+//                            binding.contentThread.posts?.clear()
+//                            repeat(thread.total_page.toInt()) {
+//                                val arr = channelPosts.receive()
+//                                binding.contentThread.posts?.clear()
+//                                binding.contentThread.posts?.addAll(arr)
+//                                binding.contentThread.executePendingBindings()
+//
+//                            }
+//                            FirebaseFirestore.getInstance().collection("${sha512(user_name)}").document("${thread.thread_id}").set(thread).addOnSuccessListener {
+//                                Snackbar.make(binding.root, "Thread saved", Snackbar.LENGTH_LONG)
+//                                        .setAction("Done", null).show()
+//                            }
+//
+//
+//                        }
+
+
+
+                        GlobalScope.launch(Dispatchers.Main) {
+                            val saving_thread = thread
+                            val threads = ArrayList<Post>()
+                            repeat(saving_thread.total_page.toInt()) {
+                                Snackbar.make(binding.root,"!!!!!!!!!!!!!!!!!!!!!!!!!!!!",Snackbar.LENGTH_LONG)
+                                threads.addAll(channelPosts.receive())
+//                                binding.contentThread.posts?.addAll(channelPosts.receive())
+//                                binding.contentThread.executePendingBindings()
+
+                            }
+                            saving_thread.item_data = threads
+                            Log.d("save threads", threads.toString())
+                            FirebaseFirestore.getInstance().collection("${sha512(user_name)}").document("${saving_thread.thread_id}").set(saving_thread).addOnSuccessListener {
+                                Snackbar.make(binding.root, "Thread saved", Snackbar.LENGTH_LONG)
+                                        .setAction("Done", null).show()
+                            }
                         }
 
 //                        FirebaseStorage.getInstance().reference.child("users_saved_thread/${user_name.md5()}/${thread.thread_id}.json")
 //                                .putBytes(thread.toString().toByteArray()).addOnSuccessListener{
 //
 //                                }
-
-                        current_page = 1
-
-                        fetchThreadPosts()
+//
+//                        current_page = 1
+//
+//                        fetchThreadPosts()
 
                     }
                     R.id.action_next_page -> {
@@ -126,6 +155,8 @@ class ThreadActivity : AppCompatActivity() {
         getSupportActionBar()?.setTitle(thread.title)
 
         if (intent.hasExtra("show_saved")) {
+//            fab.hide()
+
             FirebaseFirestore.getInstance().collection(sha512(user_name)).document("${thread.thread_id}")
                     .get()
                     .addOnSuccessListener {
@@ -179,7 +210,7 @@ class ThreadActivity : AppCompatActivity() {
                     }
 
         } else {
-
+//            fab.show()
             getSupportActionBar()?.setTitle(thread.title)
 
             if (thread.item_data.isNullOrEmpty())
