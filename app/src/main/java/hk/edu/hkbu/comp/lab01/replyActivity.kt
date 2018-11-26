@@ -52,11 +52,12 @@ class replyActivity : AppCompatActivity() {
 
         Log.d("current", thread_id)
 
-        val digest=LIHKGService.replyDigest(thread_id, content)
+
         val userId = LIHKGService.getUID()
         val timestamp = LIHKGService.timestamp(true)
+        val digest = LIHKGService.replyDigest(thread_id, content)
 
-        Log.d("whatiwant", "thread_id = ${thread_id} content = ${content} digest = ${digest} userID = ${userId} timestamp = ${timestamp}")
+        Log.d("whatiwant", "toke = ${LIHKGService.getToken()} thread_id = ${thread_id} content = ${content} digest = ${digest} userID = ${userId} timestamp = ${timestamp}")
 
         if (!content.equals("")) {
             LIHKGService.instance.reply(thread_id, content, digest, userId, timestamp).enqueue(object : retrofit2.Callback<Response<Any>> {

@@ -1,5 +1,6 @@
 package hk.edu.hkbu.comp.lab01
 
+import android.util.Log
 import com.google.common.hash.Hashing
 import hk.edu.hkbu.comp.lab01.json.Login
 import hk.edu.hkbu.comp.lab01.json.Response
@@ -44,6 +45,7 @@ interface LIHKGService {
         }
 
         fun replyDigest(thread_id: String, content: String): String {
+            Log.d("LIHKGService","jeams\$post\$https://lihkg.com/api_v2/thread/reply\$thread_id=$thread_id&content=$content\$${this.token}\$$currentTimestamp")
             return Hashing.sha1().hashString("jeams\$post\$https://lihkg.com/api_v2/thread/reply\$thread_id=$thread_id&content=$content\$${this.token}\$$currentTimestamp", Charset.defaultCharset()).toString()
         }
     }
@@ -84,7 +86,7 @@ interface LIHKGService {
 
     @FormUrlEncoded
     @POST("/api_v2/thread/reply")
-    fun reply(@Field("thread_id") thread_id: String, @Field("content") content: String, @Header("X-LI-DIGEST") digest: String, @Header("X-LI-USER") userId: String = Companion.userId, @Header("X-LI-TIMESTAMP") timestamp: String = Companion.timestamp()): Call<Response<Any>>
+    fun reply(@Field("thread_id") thread_id: String, @Field("content") content: String, @Header("X-LI-DIGEST") digest: String, @Header("X-LI-USER") userId: String = Companion.userId, @Header("X-LI-REQUEST-TIME") timestamp: String = Companion.timestamp()): Call<Response<Any>>
     // thread_id=xxxxxx&content=xxxxx
 
     // reply("", "", LIHKGService.replyDigest("", ""))
