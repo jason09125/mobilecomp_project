@@ -2,15 +2,20 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-        android:id="@+id/action_save"
-        android:icon="@drawable/ic_save_post"
-        android:title="@string/menu_save_post" />
+    <group android:id="@+id/logined_action"
+        android:visible="false">
 
-    <item
-        android:id="@+id/action_comment"
-        android:icon="@drawable/ic_add_comment"
-        android:title="@string/menu_add_comment" />
+        <item
+            android:id="@+id/action_save"
+            android:icon="@drawable/ic_save_post"
+            android:title="@string/menu_save_post"/>
+
+        <item
+            android:id="@+id/action_comment"
+            android:icon="@drawable/ic_add_comment"
+            android:title="@string/menu_add_comment"/>
+
+    </group>
 
     <item
         android:id="@+id/action_prev_page"
@@ -20,6 +25,7 @@
     <item
         android:id="@+id/action_next_page"
         android:icon="@drawable/ic_next_page"
-        android:title="@string/menu_next_page" />
+        android:title="@string/menu_next_page"
+        />
 
 </menu>

@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     //    var current_category: Int = 1;
     var url_header: String = "/api_v2/thread/"
 
-    var user_name: String = LIHKGService.user_name.toString()
+    var user_id: String = LIHKGService.getUID()
 
     private val refreshThreadListListener = SwipeRefreshLayout.OnRefreshListener {
         // 模擬加載時間
@@ -237,8 +237,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             fab.hide()
 
 //            binding.appBarMain?.contentMain?.listViewModel?.items
-            Log.d("current_category", sha512(user_name))
-            FirebaseFirestore.getInstance().collection(sha512(user_name))
+            Log.d("current_category", sha512(user_id))
+            FirebaseFirestore.getInstance().collection(sha512(user_id))
                     .get()
                     .addOnSuccessListener {
                         //                        Log.d("current_category",it.toObjects(Thread::class.java).toString())

@@ -28,6 +28,7 @@ import android.widget.Toast
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import hk.edu.hkbu.comp.lab01.R.menu.fab_items
 import hk.edu.hkbu.comp.lab01.json.Login
 import hk.edu.hkbu.comp.lab01.json.Response
 
@@ -164,6 +165,9 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
 
                         LIHKGService.user_name.set(response.body()?.response?.user?.nickname)
                         LIHKGService.set_login_check(true)
+
+//                        val logined_action = findViewById<View>(R.id.logined_action)
+//                        logined_action.visibility = View.VISIBLE
 
                         Toast.makeText(this@LoginActivity, "Welcome ${response.body()?.response?.user?.nickname}", Toast.LENGTH_SHORT).show()
                     } else {

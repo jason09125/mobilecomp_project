@@ -4,12 +4,16 @@ import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.databinding.ObservableArrayList
 import android.os.Bundle
+import android.support.design.internal.NavigationMenu
 import android.support.design.widget.Snackbar
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
+import android.widget.Toolbar
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import hk.edu.hkbu.comp.lab01.databinding.ActivityThreadBinding
@@ -29,11 +33,12 @@ import java.security.MessageDigest
 
 class ThreadActivity : AppCompatActivity() {
 
+    lateinit var binding: ActivityThreadBinding
     lateinit var thread: Thread
     val channelPosts = Channel<List<Post>>()
     var current_page: Int = 1;
 
-    var user_name: String = LIHKGService.user_name.toString();
+    var user_id: String = LIHKGService.getUID()
 
     private val refreshThread = SwipeRefreshLayout.OnRefreshListener {
         // 模擬加載時間
@@ -48,10 +53,17 @@ class ThreadActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        var binding: ActivityThreadBinding = DataBindingUtil.setContentView(this, R.layout.activity_thread)
-        setSupportActionBar(toolbar)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_thread)
+        setSupportActionBar(binding.toolbar)
+
 
         binding.fabMenu.setMenuListener(object : SimpleMenuListenerAdapter() {
+            override fun onPrepareMenu(navigationMenu: NavigationMenu): Boolean {
+                Log.d("get_login_check","${LIHKGService.get_login_check()}")
+//                navigationMenu.rootMenu.setGroupVisible()
+                navigationMenu.setGroupVisible(R.id.logined_action, LIHKGService.get_login_check())
+                return super.onPrepareMenu(navigationMenu)
+            }
             override fun onMenuItemSelected(menuItem: MenuItem?): Boolean {
                 when (menuItem?.itemId) {
                     R.id.action_comment -> {
@@ -67,8 +79,8 @@ class ThreadActivity : AppCompatActivity() {
 
                     }
                     R.id.action_save -> {
-                        Log.d("user_name", user_name)
-                        Log.d("sha512(user_name)", sha512(user_name))
+                        Log.d("user_id", user_id)
+                        Log.d("sha512(user_name)", sha512(user_id))
 
 
 //                        GlobalScope.launch(Dispatchers.Main) {
@@ -131,7 +143,7 @@ class ThreadActivity : AppCompatActivity() {
                             saving_thread.item_data = threads
 
 
-                            FirebaseFirestore.getInstance().collection("${sha512(user_name)}")
+                            FirebaseFirestore.getInstance().collection("${sha512(user_id)}")
                                     .document("${saving_thread.thread_id}")
                                     .set(saving_thread)
                                     .addOnSuccessListener {
@@ -193,7 +205,7 @@ class ThreadActivity : AppCompatActivity() {
         if (intent.hasExtra("show_saved")) {
 //            fab.hide()
 
-            FirebaseFirestore.getInstance().collection(sha512(user_name)).document("${thread.thread_id}")
+            FirebaseFirestore.getInstance().collection(sha512(user_id)).document("${thread.thread_id}")
                     .get()
                     .addOnSuccessListener {
                         //                        for (postData in it) {
@@ -279,6 +291,10 @@ class ThreadActivity : AppCompatActivity() {
             }
 //    Log.d("widthXXX","${getWindowManager().getDefaultDisplay().getWidth()}")
         }
+
+//        findViewById<View>(R.id.logined_action).visibility = if (LIHKGService.get_login_check()) View.VISIBLE else View.INVISIBLE
+
+
     }
 
 
@@ -290,6 +306,8 @@ class ThreadActivity : AppCompatActivity() {
 //        val md = MessageDigest.getInstance("MD5")
 //        return BigInteger(1, md.digest(toByteArray())).toString(16).padStart(32, '0')
 //    }
+
+
 
     fun sha512(input: String): String {
         val digest = MessageDigest.getInstance("SHA-512")
