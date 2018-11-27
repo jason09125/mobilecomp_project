@@ -26,6 +26,7 @@ import hk.edu.hkbu.comp.lab01.json.User
 import io.github.yavski.fabspeeddial.SimpleMenuListenerAdapter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import me.tatarka.bindingcollectionadapter2.ItemBinding
@@ -40,13 +41,16 @@ class ThreadActivity : AppCompatActivity() {
 
     var user_id: String = LIHKGService.getUID()
 
+    val all_thread_Posts = Channel<List<Post>>()
+
+
     private val refreshThread = SwipeRefreshLayout.OnRefreshListener {
         // 模擬加載時間
 //        Thread.sleep(200)
         refreshThreadLayout.setProgressViewOffset(true, 0, 100)
 
         fetchThreadPosts()
-        java.lang.Thread.sleep(200)
+//        java.lang.Thread.sleep(200)
         refreshThreadLayout.isRefreshing = false
 
     }
@@ -80,7 +84,7 @@ class ThreadActivity : AppCompatActivity() {
                     }
                     R.id.action_save -> {
                         Log.d("user_id", user_id)
-                        Log.d("sha512(user_name)", sha512(user_id))
+                        Log.d("sha512(user_id)", sha512(user_id))
 
 
 //                        GlobalScope.launch(Dispatchers.Main) {
@@ -103,56 +107,15 @@ class ThreadActivity : AppCompatActivity() {
 //
 //                        }
 
-
-                        GlobalScope.launch(Dispatchers.Main) {
-                            val saving_thread: Thread = thread
-                            val threads = ArrayList<Post>()
-//                            getAllThreadPosts()
-//                            repeat(saving_thread.total_page.toInt()) {
-//                                Snackbar.make(binding.root, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!", Snackbar.LENGTH_LONG)
-//                                threads.addAll(channelPosts.receive())
-////                                binding.contentThread.posts?.addAll(channelPosts.receive())
-////                                binding.contentThread.executePendingBindings()
-//
-//                            }
-//                            saving_thread.item_data = threads
-                            Log.d("getAllThreadPosts", thread.thread_id)
-
-                            for (i in 1..thread.total_page.toInt()) {
-                                launch(Dispatchers.IO) {
-                                    val call = LIHKGService.instance.getThreadPosts(thread.thread_id, "$i", "msg_num").execute()
-                                    if (call.isSuccessful) {
-                                        val posts = call.body()?.response?.item_data as List<Post>
-                                        channelPosts.send(posts)
-                                    }
-                                }.join()
-                            }
-                            Log.d("thread.total_page.toInt()", thread.total_page.toInt().toString())
-                            repeat(thread.total_page.toInt()) {
-//                                Snackbar.make(binding.root, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!", Snackbar.LENGTH_LONG)
-                                Log.d("inside_repeat","inside_repeat")
-                                val data = channelPosts.receive()
-                                Log.d("data", data.toString())
-                                threads.addAll(data)
-                                binding.contentThread.posts?.addAll(data)
-                                binding.contentThread.executePendingBindings()
-                            }
-                            Log.d("saving_thread", saving_thread.toString())
-                            Log.d("threads.size", threads.size.toString())
-
-                            saving_thread.item_data = threads
-
-
-                            FirebaseFirestore.getInstance().collection("${sha512(user_id)}")
-                                    .document("${saving_thread.thread_id}")
-                                    .set(saving_thread)
-                                    .addOnSuccessListener {
-                                        Log.d("FirebaseFirestore", saving_thread.toString())
-                                        Snackbar.make(binding.root, "Thread saved", Snackbar.LENGTH_LONG)
-                                                .setAction("Done", null).show()
-                                        fetchThreadPosts()
-                                    }
-                        }
+                        FirebaseFirestore.getInstance().collection("${(user_id)}")
+                                .document("${thread.thread_id}")
+                                .set(thread)
+                                .addOnSuccessListener {
+                                    Log.d("FirebaseFirestore", thread.toString())
+                                    Snackbar.make(binding.root, "Thread saved", Snackbar.LENGTH_LONG)
+                                            .setAction("Done", null).show()
+                                    fetchThreadPosts()
+                                }
 
 //                        FirebaseStorage.getInstance().reference.child("users_saved_thread/${user_name.md5()}/${thread.thread_id}.json")
 //                                .putBytes(thread.toString().toByteArray()).addOnSuccessListener{
@@ -205,7 +168,7 @@ class ThreadActivity : AppCompatActivity() {
         if (intent.hasExtra("show_saved")) {
 //            fab.hide()
 
-            FirebaseFirestore.getInstance().collection(sha512(user_id)).document("${thread.thread_id}")
+            FirebaseFirestore.getInstance().collection((user_id)).document("${thread.thread_id}")
                     .get()
                     .addOnSuccessListener {
                         //                        for (postData in it) {
@@ -273,8 +236,8 @@ class ThreadActivity : AppCompatActivity() {
                 thread.item_data = ObservableArrayList<Post>()
 
             binding.contentThread.itemBinding = ItemBinding.of<Post>(BR.post, R.layout.content_thread_item)
-            binding.contentThread.posts = thread.item_data as? ObservableArrayList<Post>
-            binding.contentThread.numPosts = thread.no_of_reply.toInt()
+            binding.contentThread.posts = ObservableArrayList<Post>()
+//            binding.contentThread.numPosts = thread.no_of_reply.toInt()
 
             fetchThreadPosts()
             refreshThreadLayout.setOnRefreshListener(refreshThread)
@@ -294,7 +257,57 @@ class ThreadActivity : AppCompatActivity() {
 
 //        findViewById<View>(R.id.logined_action).visibility = if (LIHKGService.get_login_check()) View.VISIBLE else View.INVISIBLE
 
+        GlobalScope.launch(Dispatchers.Main) {
+            Log.d("getAllThreadPosts", thread.thread_id)
+            Log.d("getAllThreadPosts", thread.total_page.toString())
+            for (i in 1..thread.total_page.toInt()) {
+                Log.d("inside thread.total_page.toInt()", thread.total_page.toInt().toString())
+                launch(Dispatchers.IO) {
+                    val call = LIHKGService.instance.getThreadPosts(thread.thread_id, "$i", "msg_num").execute()
+                    if (call.isSuccessful) {
+                        val posts = call.body()?.response?.item_data as List<Post>
+                        all_thread_Posts.send(posts)
+                        Log.d("call.isSuccessful", posts.toString())
+                    }
+                }.join()
+            }
+        }
 
+        GlobalScope.launch(Dispatchers.Main) {
+
+            //                            getAllThreadPosts()
+//                            repeat(saving_thread.total_page.toInt()) {
+//                                Snackbar.make(binding.root, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!", Snackbar.LENGTH_LONG)
+//                                threads.addAll(channelPosts.receive())
+////                                binding.contentThread.posts?.addAll(channelPosts.receive())
+////                                binding.contentThread.executePendingBindings()
+//
+//                            }
+//                            saving_thread.item_data = threads
+
+
+
+
+//            val saving_thread: Thread = thread
+            val threads = ArrayList<Post>()
+            Log.d("thread.total_page.toInt()", thread.total_page.toInt().toString())
+            repeat(thread.total_page.toInt()) {
+                //                                Snackbar.make(binding.root, "!!!!!!!!!!!!!!!!!!!!!!!!!!!!", Snackbar.LENGTH_LONG)
+                Log.d("inside_repeat","inside_repeat")
+                val data = all_thread_Posts.receive()
+                Log.d("data", data.toString())
+                threads.addAll(data)
+//                                binding.contentThread.posts?.addAll(data)
+//                                binding.contentThread.executePendingBindings()
+            }
+            Log.d("saving_thread", thread.toString())
+            Log.d("threads.size", threads.size.toString())
+
+            thread.item_data = threads
+
+
+
+        }
     }
 
 

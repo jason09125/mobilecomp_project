@@ -45,13 +45,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     //    var current_category: Int = 1;
     var url_header: String = "/api_v2/thread/"
 
+    var user_name: String = LIHKGService.user_name.toString()
+
     var user_id: String = LIHKGService.getUID()
+
 
     private val refreshThreadListListener = SwipeRefreshLayout.OnRefreshListener {
         // 模擬加載時間
 //        Thread.sleep(200)
+
         refreshThread()
-        //java.lang.Thread.sleep(200)
+//        java.lang.Thread.sleep(200)
         refreshThreadListLayout.isRefreshing = false
 
     }
@@ -90,10 +94,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         nav_view.setNavigationItemSelectedListener(this)
 
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        user_id = LIHKGService.getUID()
 
         refreshThread()
         refreshThreadListLayout.setOnRefreshListener(refreshThreadListListener)
-
     }
 
     fun refreshThread() {
@@ -231,13 +240,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                        }
                    })
                }*/
+        Log.d("current_category_test", "test1 " + user_id)
         if (current_category.equals("0")) {
+            Log.d("current_category_test", "test2")
+
                 setTitle("厲害了我的紅登 留底")
             fab.hide()
 
 //            binding.appBarMain?.contentMain?.listViewModel?.items
-            Log.d("current_category", sha512(user_id))
-            FirebaseFirestore.getInstance().collection(sha512(user_id))
+            Log.d("current_category", user_id)
+            FirebaseFirestore.getInstance().collection(user_id)
                     .get()
                     .addOnSuccessListener {
                         //                        Log.d("current_category",it.toObjects(Thread::class.java).toString())
