@@ -36,6 +36,11 @@
     <string name="menu_next_page">Next page</string>
     <string name="title_activity_reply">replyActivity</string>
     <string name="comment">Comment</string>
-    <string name="link">URL</string>
-    <string name="reply_back">Back</string>
+    <string name="bold">Bold</string>
+    <string name="italic">Italic</string>
+    <string name="underline">Underline</string>
+    <string name="align_left">Align Left</string>
+    <string name="align_center">Align Center</string>
+    <string name="align_right">Align Right</string>
+    <string name="member">Member</string>
 </resources>

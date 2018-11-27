@@ -2,8 +2,23 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/action_link"
-        android:icon="@drawable/ic_action_link"
-        android:title="@string/link" />
+        android:id="@+id/action_bold"
+        android:icon="@drawable/ic_bold"
+        android:title="@string/bold" />
+
+    <item
+        android:id="@+id/action_italic"
+        android:icon="@drawable/ic_italic"
+        android:title="@string/italic" />
+
+    <item
+        android:id="@+id/action_underline"
+        android:icon="@drawable/ic_underline"
+        android:title="@string/underline" />
+
+    <item
+        android:id="@+id/action_align_left"
+        android:icon="@drawable/ic_align_left"
+        android:title="@string/align_left" />
 
 </menu>

@@ -12,6 +12,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
 import java.nio.charset.Charset
+import java.net.URLEncoder
 
 interface LIHKGService {
 
@@ -64,8 +65,8 @@ interface LIHKGService {
         }
 
         fun replyDigest(thread_id: String, content: String): String {
-            Log.d("LIHKGService","jeams\$post\$https://lihkg.com/api_v2/thread/reply\$thread_id=$thread_id&content=$content\$${this.token}\$$currentTimestamp")
-            return Hashing.sha1().hashString("jeams\$post\$https://lihkg.com/api_v2/thread/reply\$thread_id=$thread_id&content=$content\$${this.token}\$$currentTimestamp", Charset.defaultCharset()).toString()
+            Log.d("LIHKGService","jeams\$post\$https://lihkg.com/api_v2/thread/reply\$thread_id=$thread_id&content=${URLEncoder.encode(content, "utf-8")}\$${this.token}\$$currentTimestamp")
+            return Hashing.sha1().hashString("jeams\$post\$https://lihkg.com/api_v2/thread/reply\$thread_id=$thread_id&content=${URLEncoder.encode(content, "utf-8")}\$${this.token}\$$currentTimestamp", Charset.defaultCharset()).toString()
         }
     }
 

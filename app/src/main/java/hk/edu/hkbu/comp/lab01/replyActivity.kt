@@ -18,10 +18,65 @@ import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_reply.*
 import kotlinx.android.synthetic.main.content_reply.*
 import retrofit2.Call
+import android.support.annotation.NonNull
+import android.view.MenuItem
+import android.view.View
+import android.text.Selection.getSelectionEnd
+import android.text.Selection.getSelectionStart
+import android.R.id.edit
+import android.support.design.internal.BottomNavigationItemView
+import android.widget.EditText
+import android.R.id.edit
+
+
+
 
 class replyActivity : AppCompatActivity() {
 
     var thread_id = ""
+
+    private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+
+        val content = user_comment.text.toString()
+
+        val et = findViewById<View>(R.id.user_comment) as EditText
+        val startSelection = et.selectionStart
+        val endSelection = et.selectionEnd
+        val selectedText = et.text.toString().substring(startSelection, endSelection)
+
+        when (item.itemId) {
+            R.id.action_bold -> {
+                if(selectedText.equals("")){
+
+                }
+            }
+            R.id.action_italic -> {
+                Toast.makeText(this@replyActivity, "selectedText: " + selectedText, Toast.LENGTH_LONG).show()
+
+            }
+            R.id.action_underline -> {
+
+
+            }
+            R.id.action_align_left -> {
+
+
+            }
+            R.id.action_align_center -> {
+
+
+            }
+            R.id.action_align_right -> {
+                Toast.makeText(this@replyActivity, "content: " + content, Toast.LENGTH_LONG).show()
+
+            }
+            R.id.action_member -> {
+                Toast.makeText(this@replyActivity, "selectedText: " + selectedText, Toast.LENGTH_LONG).show()
+
+            }
+        }
+        false
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +102,11 @@ class replyActivity : AppCompatActivity() {
 
         }
 
+        val bottomNavigation: BottomNavigationView = findViewById(R.id.reply_appbar)
+        val bottomNavigation_2: BottomNavigationView = findViewById(R.id.reply_appbar_2)
 
+        bottomNavigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+        bottomNavigation_2.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
     }
 
     private fun attemptComment(): Boolean {
