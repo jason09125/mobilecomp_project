@@ -108,6 +108,9 @@ interface LIHKGService {
     @POST("/api_v2/thread/reply")
     fun reply(@Field("thread_id") thread_id: String, @Field("content") content: String, @Header("X-LI-DIGEST") digest: String, @Header("X-LI-USER") userId: String = Companion.userId, @Header("X-LI-REQUEST-TIME") timestamp: String = Companion.timestamp()): Call<Response<Any>>
     // thread_id=xxxxxx&content=xxxxx
-
     // reply("", "", LIHKGService.replyDigest("", ""))
+
+    @FormUrlEncoded
+    @POST("/api_v2/thread/create")
+    fun create(@Field("cat_id") cat_id: Int, @Field("title") title: String, @Field("content") content: String,@Field("sub_cat_id") sub_cat_id: Int,@Header("X-LI-DIGEST") digest: String, @Header("X-LI-USER") userId: String = Companion.userId, @Header("X-LI-REQUEST-TIME") timestamp: String = Companion.timestamp()): Call<Response<Any>>
 }

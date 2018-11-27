@@ -43,4 +43,14 @@
     <string name="align_center">Align Center</string>
     <string name="align_right">Align Right</string>
     <string name="member">Member</string>
+    <!--DropDownListItems-->
+    <string-array name="dropDownList">
+        <item>吹水台</item>
+        <item>時事台</item>
+        <item>創意台</item>
+        <item>硬件台</item>
+        <item>學術台</item>
+        <item>兒童台</item>
+        <item>黑洞</item>
+    </string-array>
 </resources>
