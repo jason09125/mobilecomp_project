@@ -68,6 +68,11 @@ interface LIHKGService {
             Log.d("LIHKGService","jeams\$post\$https://lihkg.com/api_v2/thread/reply\$thread_id=$thread_id&content=${URLEncoder.encode(content, "utf-8")}\$${this.token}\$$currentTimestamp")
             return Hashing.sha1().hashString("jeams\$post\$https://lihkg.com/api_v2/thread/reply\$thread_id=$thread_id&content=${URLEncoder.encode(content, "utf-8")}\$${this.token}\$$currentTimestamp", Charset.defaultCharset()).toString()
         }
+
+        fun createDigest(cat_id: Int, content: String, title:String,sub_cat_id: Int): String {
+//            Log.d("LIHKGService","jeams\$post\$https://lihkg.com/api_v2/thread/create\$cat_id=$cat_id&content=${URLEncoder.encode(content, "utf-8")}&title=${URLEncoder.encode(title, "utf-8")}&$sub_cat_id\$${this.token}\$$currentTimestamp")
+            return Hashing.sha1().hashString("jeams\$post\$https://lihkg.com/api_v2/thread/create\$cat_id=$cat_id&title=${URLEncoder.encode(title, "utf-8")}&content=${URLEncoder.encode(content, "utf-8")}&sub_cat_id=$sub_cat_id\$${this.token}\$$currentTimestamp", Charset.defaultCharset()).toString()
+        }
     }
 
     @POST("/api_v2/thread/latest/page/{page}")
@@ -108,6 +113,9 @@ interface LIHKGService {
     @POST("/api_v2/thread/reply")
     fun reply(@Field("thread_id") thread_id: String, @Field("content") content: String, @Header("X-LI-DIGEST") digest: String, @Header("X-LI-USER") userId: String = Companion.userId, @Header("X-LI-REQUEST-TIME") timestamp: String = Companion.timestamp()): Call<Response<Any>>
     // thread_id=xxxxxx&content=xxxxx
-
     // reply("", "", LIHKGService.replyDigest("", ""))
+
+    @FormUrlEncoded
+    @POST("/api_v2/thread/create")
+    fun create(@Field("cat_id") cat_id: Int, @Field("title") title: String, @Field("content") content: String,@Field("sub_cat_id") sub_cat_id: Int,@Header("X-LI-DIGEST") digest: String, @Header("X-LI-USER") userId: String = Companion.userId, @Header("X-LI-REQUEST-TIME") timestamp: String = Companion.timestamp()): Call<Response<Any>>
 }

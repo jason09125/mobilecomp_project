@@ -47,6 +47,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onDown(e: MotionEvent?): Boolean {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
+import kotlinx.android.synthetic.main.abc_screen_toolbar.*
+import kotlinx.android.synthetic.main.design_navigation_menu_item.view.*
 
     override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean {
         Log.d("onFling","onFling")
@@ -107,8 +109,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     var user_name: String = LIHKGService.user_name.toString()
 
     var user_id: String = LIHKGService.getUID()
-
-
 
 
     private val refreshThreadListListener = SwipeRefreshLayout.OnRefreshListener {
@@ -172,7 +172,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         user_id = LIHKGService.getUID()
 
-        if(LIHKGService.get_login_check()){
+        if (LIHKGService.get_login_check()) {
             Log.d("testFab", "can come here----------------")
             fab.setImageResource(R.drawable.ic_logout)
         }
@@ -329,7 +329,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (current_category.equals("0")) {
             Log.d("current_category_test", "test2")
 
-                setTitle("厲害了我的紅登 留底")
+            setTitle("厲害了我的紅登-留底")
             fab.hide()
 
 //            binding.appBarMain?.contentMain?.listViewModel?.items
@@ -474,6 +474,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    fun createPost() {
+        if (LIHKGService.get_login_check()) {
+            with(Intent(this, CreateActivity    ::class.java)) {
+                startActivity(this)
+            }
+        } else {
+            Toast.makeText(this@MainActivity, "未登入學咩人出Post。", Toast.LENGTH_SHORT).show()
+        }
+
+    }
 
     fun getNextPage() {
         if (current_category != "hot/page/" && current_category != "latest/page/") {
@@ -513,7 +523,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 refreshThread()
                 return true
             }
-            R.id.action_next_list -> {
+            R.id.action_createPost -> {
+                createPost()
                 return true
             }
             else -> return super.onOptionsItemSelected(item)
@@ -671,16 +682,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     fun showThreadActivity(thread: Thread) {
         with(Intent(this, ThreadActivity::class.java)) {
             putExtra("thread", thread)
-            if(current_category.equals("0")) {
+            if (current_category.equals("0")) {
                 putExtra("show_saved", true)
             }
             startActivity(this)
             overridePendingTransition(R.anim.child_enter, R.anim.parent_exit)
         }
-    }
-
-
-    fun showProfileActivity(view: View) {
-
     }
 }

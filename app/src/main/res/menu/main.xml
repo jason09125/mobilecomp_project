@@ -2,19 +2,28 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <!--<item-->
+        <!--android:id="@+id/action_refresh"-->
+        <!--android:orderInCategory="100"-->
+
+        <!--android:title="F5"-->
+        <!--android:titleTextColor="@color/motherlandyellow"-->
+        <!--app:showAsAction="ifRoom" />-->
+
     <item
-        android:id="@+id/action_refresh"
+        android:id="@+id/action_createPost"
+        android:icon="@drawable/ic_add_black_48dp_00"
+        android:title="Create Post"
         android:orderInCategory="100"
-        android:titleTextColor="@color/motherlandyellow"
-        android:title="F5"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_next_list"
+        android:icon="@drawable/ic_next_page"
+        android:title="Next Page"
         android:orderInCategory="100"
         android:titleTextColor="@color/motherlandyellow"
-        android:title="@string/menu_next_page"
-        android:icon="@drawable/ic_next_page"
         app:showAsAction="ifRoom" />
-    
+
+
 </menu>
