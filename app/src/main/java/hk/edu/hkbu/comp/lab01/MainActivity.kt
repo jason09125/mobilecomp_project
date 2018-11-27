@@ -9,8 +9,6 @@ import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
 import hk.edu.hkbu.comp.lab01.databinding.ActivityMainBinding
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
@@ -22,8 +20,7 @@ import android.support.v4.view.MotionEventCompat
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AlertDialog
 import android.text.Html
-import android.view.MotionEvent
-import android.view.View
+import android.view.*
 import android.widget.Toast
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.database.*
@@ -32,9 +29,71 @@ import java.security.MessageDigest
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import hk.edu.hkbu.comp.lab01.json.*
+import java.lang.Exception
+import android.support.v4.view.GestureDetectorCompat
 
 
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+
+
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, GestureDetector.OnGestureListener {
+    override fun onShowPress(e: MotionEvent?) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onSingleTapUp(e: MotionEvent?): Boolean {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onDown(e: MotionEvent?): Boolean {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean {
+        Log.d("onFling","onFling")
+        var result : Boolean = false;
+        try {
+            var diffY:Float = e2!!.getY() - e1!!.getY();
+            var diffX:Float = e2!!.getX() - e1!!.getX();
+            val SWIPE_VELOCITY_THRESHOLD = 100
+            val SWIPE_THRESHOLD = 100
+            if (Math.abs(diffX) > Math.abs(diffY)) {
+
+                if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                    if (diffX > 0) {
+//                        onSwipeRight();
+                        Log.d("onFling","swipe Right")
+                        getNextPage()
+                        refreshThread()
+                    } else {
+//                        onSwipeLeft();
+                    }
+                    result = true;
+                }
+            }
+            else if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
+                if (diffY > 0) {
+//                    onSwipeBottom();
+                } else {
+//                    onSwipeTop();
+                }
+                result = true;
+            }
+        } catch (exception:Exception) {
+            exception.printStackTrace();
+        }
+        return result;
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
+    }
+
+
+    override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float): Boolean {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onLongPress(e: MotionEvent?) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     lateinit var binding: ActivityMainBinding
 
@@ -48,6 +107,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     var user_name: String = LIHKGService.user_name.toString()
 
     var user_id: String = LIHKGService.getUID()
+
+
 
 
     private val refreshThreadListListener = SwipeRefreshLayout.OnRefreshListener {
@@ -119,6 +180,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         refreshThread()
         refreshThreadListLayout.setOnRefreshListener(refreshThreadListListener)
     }
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+
+        return super.onTouchEvent(event)
+    }
+
+
+
+
 
     fun refreshThread() {
         Log.d("current_page", current_page.toString())
