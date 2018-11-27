@@ -68,6 +68,7 @@ class ThreadActivity : AppCompatActivity() {
                 navigationMenu.setGroupVisible(R.id.logined_action, LIHKGService.get_login_check())
                 return super.onPrepareMenu(navigationMenu)
             }
+
             override fun onMenuItemSelected(menuItem: MenuItem?): Boolean {
                 when (menuItem?.itemId) {
                     R.id.action_comment -> {

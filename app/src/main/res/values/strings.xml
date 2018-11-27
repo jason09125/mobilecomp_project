@@ -37,4 +37,5 @@
     <string name="title_activity_reply">replyActivity</string>
     <string name="comment">Comment</string>
     <string name="link">URL</string>
+    <string name="reply_back">Back</string>
 </resources>

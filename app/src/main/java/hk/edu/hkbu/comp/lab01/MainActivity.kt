@@ -82,9 +82,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         fab.setOnClickListener { view ->
             //            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                    .setAction("Action", null).show()
-            with(Intent(this, LoginActivity::class.java)) {
-                startActivity(this)
+            if(LIHKGService.get_login_check()){
+                LIHKGService.set_login_check(false)
+                Toast.makeText(this@MainActivity, "Logout.", Toast.LENGTH_LONG).show()
+                LIHKGService.user_name.set("Guest")
+                with(Intent(this, MainActivity::class.java)) {
+                    startActivity(this)
+                }
+            } else {
+                with(Intent(this, LoginActivity::class.java)) {
+                    startActivity(this)
+                }
             }
+
         }
 
         val toggle = ActionBarDrawerToggle(
@@ -100,6 +110,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onStart()
 
         user_id = LIHKGService.getUID()
+
+        if(LIHKGService.get_login_check()){
+            Log.d("testFab", "can come here----------------")
+            fab.setImageResource(R.drawable.ic_logout)
+        }
 
         refreshThread()
         refreshThreadListLayout.setOnRefreshListener(refreshThreadListListener)

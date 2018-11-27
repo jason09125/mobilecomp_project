@@ -2,6 +2,7 @@ package hk.edu.hkbu.comp.lab01
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.databinding.DataBindingUtil
 import android.os.Build
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
@@ -46,13 +47,7 @@ class replyActivity : AppCompatActivity() {
 
         }
 
-//        bottomNavigation.setOnNavigationItemSelectedListener { item ->
-//            when (item.itemId) {
-//                R.id.action_link -> {
-//                }
-//            }
-//            return true
-//        }
+
     }
 
     private fun attemptComment(): Boolean {
