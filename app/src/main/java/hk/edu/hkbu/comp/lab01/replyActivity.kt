@@ -37,42 +37,125 @@ class replyActivity : AppCompatActivity() {
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
 
-        val content = user_comment.text.toString()
+        var tmp_content = user_comment.text.toString()
 
         val et = findViewById<View>(R.id.user_comment) as EditText
         val startSelection = et.selectionStart
         val endSelection = et.selectionEnd
-        val selectedText = et.text.toString().substring(startSelection, endSelection)
+        var selectedText = et.text.toString().substring(startSelection, endSelection)
 
         when (item.itemId) {
             R.id.action_bold -> {
                 if(selectedText.equals("")){
+                    tmp_content += "[b][/b]"
+                    user_comment.setText(tmp_content)
+                } else {
+                    var original_text = tmp_content
+                    var original_selected = selectedText
 
+                    selectedText = "[b]" + selectedText
+                    selectedText += "[/b]"
+
+                    tmp_content = tmp_content.replace(original_selected, selectedText)
+
+                    user_comment.setText(tmp_content)
                 }
             }
             R.id.action_italic -> {
-                Toast.makeText(this@replyActivity, "selectedText: " + selectedText, Toast.LENGTH_LONG).show()
+                if(selectedText.equals("")){
+                    tmp_content += "[i][/i]"
+                    user_comment.setText(tmp_content)
+                } else {
+                    var original_text = tmp_content
+                    var original_selected = selectedText
 
+                    selectedText = "[i]" + selectedText
+                    selectedText += "[/i]"
+
+                    tmp_content = tmp_content.replace(original_selected, selectedText)
+
+                    user_comment.setText(tmp_content)
+                }
             }
             R.id.action_underline -> {
+                if(selectedText.equals("")){
+                    tmp_content += "[u][/u]"
+                    user_comment.setText(tmp_content)
+                } else {
+                    var original_text = tmp_content
+                    var original_selected = selectedText
 
+                    selectedText = "[u]" + selectedText
+                    selectedText += "[/u]"
 
+                    tmp_content = tmp_content.replace(original_selected, selectedText)
+
+                    user_comment.setText(tmp_content)
+                }
             }
             R.id.action_align_left -> {
+                if(selectedText.equals("")){
+                    tmp_content += "[left][/left]"
+                    user_comment.setText(tmp_content)
+                } else {
+                    var original_text = tmp_content
+                    var original_selected = selectedText
 
+                    selectedText = "[left]" + selectedText
+                    selectedText += "[/left]"
 
+                    tmp_content = tmp_content.replace(original_selected, selectedText)
+
+                    user_comment.setText(tmp_content)
+                }
             }
             R.id.action_align_center -> {
+                if(selectedText.equals("")){
+                    tmp_content += "[center][/center]"
+                    user_comment.setText(tmp_content)
+                } else {
+                    var original_text = tmp_content
+                    var original_selected = selectedText
 
+                    selectedText = "[center]" + selectedText
+                    selectedText += "[/center]"
 
+                    tmp_content = tmp_content.replace(original_selected, selectedText)
+
+                    user_comment.setText(tmp_content)
+                }
             }
             R.id.action_align_right -> {
-                Toast.makeText(this@replyActivity, "content: " + content, Toast.LENGTH_LONG).show()
+                if(selectedText.equals("")){
+                    tmp_content += "[right][/right]"
+                    user_comment.setText(tmp_content)
+                } else {
+                    var original_text = tmp_content
+                    var original_selected = selectedText
 
+                    selectedText = "[right]" + selectedText
+                    selectedText += "[/right]"
+
+                    tmp_content = tmp_content.replace(original_selected, selectedText)
+
+                    user_comment.setText(tmp_content)
+                }
             }
             R.id.action_member -> {
-                Toast.makeText(this@replyActivity, "selectedText: " + selectedText, Toast.LENGTH_LONG).show()
+                if(selectedText.equals("")){
+                    tmp_content += "[member][/member]"
+                    user_comment.setText(tmp_content)
+                } else {
+                    var original_text = tmp_content
+                    var original_selected = selectedText
 
+                    selectedText = "[member]" + selectedText
+                    selectedText += "[/member]"
+
+                    tmp_content = tmp_content.replace(original_selected, selectedText)
+
+                    user_comment.setText(tmp_content)
+                }
             }
         }
         false
