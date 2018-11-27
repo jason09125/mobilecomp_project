@@ -107,7 +107,7 @@ class ThreadActivity : AppCompatActivity() {
 //
 //                        }
 
-                        FirebaseFirestore.getInstance().collection("${(user_id)}")
+                        FirebaseFirestore.getInstance().collection("${sha512(user_id)}")
                                 .document("${thread.thread_id}")
                                 .set(thread)
                                 .addOnSuccessListener {
@@ -168,7 +168,7 @@ class ThreadActivity : AppCompatActivity() {
         if (intent.hasExtra("show_saved")) {
 //            fab.hide()
 
-            FirebaseFirestore.getInstance().collection((user_id)).document("${thread.thread_id}")
+            FirebaseFirestore.getInstance().collection((sha512(user_id))).document("${thread.thread_id}")
                     .get()
                     .addOnSuccessListener {
                         //                        for (postData in it) {

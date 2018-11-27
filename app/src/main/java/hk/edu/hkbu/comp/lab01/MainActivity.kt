@@ -249,7 +249,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 //            binding.appBarMain?.contentMain?.listViewModel?.items
             Log.d("current_category", user_id)
-            FirebaseFirestore.getInstance().collection(user_id)
+            FirebaseFirestore.getInstance().collection(sha512(user_id))
                     .get()
                     .addOnSuccessListener {
                         //                        Log.d("current_category",it.toObjects(Thread::class.java).toString())
