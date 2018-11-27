@@ -50,9 +50,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private val refreshThreadListListener = SwipeRefreshLayout.OnRefreshListener {
         // 模擬加載時間
 //        Thread.sleep(200)
-
         refreshThread()
-        java.lang.Thread.sleep(200)
+        //java.lang.Thread.sleep(200)
         refreshThreadListLayout.isRefreshing = false
 
     }
