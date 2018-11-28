@@ -31,6 +31,8 @@ import com.google.firebase.firestore.QuerySnapshot
 import hk.edu.hkbu.comp.lab01.json.*
 import java.lang.Exception
 import android.support.v4.view.GestureDetectorCompat
+import kotlinx.android.synthetic.main.abc_screen_toolbar.*
+import kotlinx.android.synthetic.main.design_navigation_menu_item.view.*
 
 
 
@@ -47,8 +49,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onDown(e: MotionEvent?): Boolean {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
-import kotlinx.android.synthetic.main.abc_screen_toolbar.*
-import kotlinx.android.synthetic.main.design_navigation_menu_item.view.*
+
 
     override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean {
         Log.d("onFling","onFling")
