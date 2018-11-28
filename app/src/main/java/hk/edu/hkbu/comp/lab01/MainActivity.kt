@@ -9,6 +9,8 @@ import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import hk.edu.hkbu.comp.lab01.databinding.ActivityMainBinding
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
@@ -20,7 +22,8 @@ import android.support.v4.view.MotionEventCompat
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AlertDialog
 import android.text.Html
-import android.view.*
+import android.view.MotionEvent
+import android.view.View
 import android.widget.Toast
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.database.*
@@ -29,74 +32,11 @@ import java.security.MessageDigest
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import hk.edu.hkbu.comp.lab01.json.*
-import java.lang.Exception
-import android.support.v4.view.GestureDetectorCompat
 import kotlinx.android.synthetic.main.abc_screen_toolbar.*
 import kotlinx.android.synthetic.main.design_navigation_menu_item.view.*
 
 
-
-
-class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, GestureDetector.OnGestureListener {
-    override fun onShowPress(e: MotionEvent?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onSingleTapUp(e: MotionEvent?): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onDown(e: MotionEvent?): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-
-    override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean {
-        Log.d("onFling","onFling")
-        var result : Boolean = false;
-        try {
-            var diffY:Float = e2!!.getY() - e1!!.getY();
-            var diffX:Float = e2!!.getX() - e1!!.getX();
-            val SWIPE_VELOCITY_THRESHOLD = 100
-            val SWIPE_THRESHOLD = 100
-            if (Math.abs(diffX) > Math.abs(diffY)) {
-
-                if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
-                    if (diffX > 0) {
-//                        onSwipeRight();
-                        Log.d("onFling","swipe Right")
-                        getNextPage()
-                        refreshThread()
-                    } else {
-//                        onSwipeLeft();
-                    }
-                    result = true;
-                }
-            }
-            else if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
-                if (diffY > 0) {
-//                    onSwipeBottom();
-                } else {
-//                    onSwipeTop();
-                }
-                result = true;
-            }
-        } catch (exception:Exception) {
-            exception.printStackTrace();
-        }
-        return result;
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-
-    }
-
-
-    override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onLongPress(e: MotionEvent?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     lateinit var binding: ActivityMainBinding
 
@@ -144,10 +84,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         fab.setOnClickListener { view ->
             //            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                    .setAction("Action", null).show()
-            if(LIHKGService.get_login_check()){
+            if (LIHKGService.get_login_check()) {
                 LIHKGService.set_login_check(false)
-                Toast.makeText(this@MainActivity, "Logout.", Toast.LENGTH_LONG).show()
-                LIHKGService.user_name.set("Guest")
+                Toast.makeText(this@MainActivity, "恭喜你成功登出。", Toast.LENGTH_LONG).show()
+                LIHKGService.user_name.set("CD-ROM")
                 with(Intent(this, MainActivity::class.java)) {
                     startActivity(this)
                 }
@@ -178,18 +118,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             fab.setImageResource(R.drawable.ic_logout)
         }
 
+
+
         refreshThread()
         refreshThreadListLayout.setOnRefreshListener(refreshThreadListListener)
     }
-
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
-
-        return super.onTouchEvent(event)
-    }
-
-
-
-
 
     fun refreshThread() {
         Log.d("current_page", current_page.toString())
@@ -330,7 +263,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (current_category.equals("0")) {
             Log.d("current_category_test", "test2")
 
-            setTitle("厲害了我的紅登-留底")
+            setTitle("偉大嘅紅登討論區-留底")
             fab.hide()
 
 //            binding.appBarMain?.contentMain?.listViewModel?.items
@@ -490,7 +423,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if (current_category != "hot/page/" && current_category != "latest/page/") {
             current_page += 1
         } else {
-            Toast.makeText(this@MainActivity, "This is the last page", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@MainActivity, "最後一頁啦", Toast.LENGTH_SHORT).show()
 
         }
     }
@@ -514,11 +447,11 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         when (item.itemId) {
-            R.id.action_refresh -> {
-                current_page = 1
-                refreshThread()
-                return true
-            }
+//            R.id.action_refresh -> {
+//                current_page = 1
+//                refreshThread()
+//                return true
+//            }
             R.id.action_next_list -> {
                 getNextPage()
                 refreshThread()

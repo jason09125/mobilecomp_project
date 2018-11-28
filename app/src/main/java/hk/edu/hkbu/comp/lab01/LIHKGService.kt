@@ -25,7 +25,7 @@ interface LIHKGService {
                     .create(LIHKGService::class.java)
         }
 
-        @JvmStatic val user_name = ObservableField<String>("Guest")
+        @JvmStatic val user_name = ObservableField<String>("CD Rom")
 //        user_name.set()
 
         private var login_check = false

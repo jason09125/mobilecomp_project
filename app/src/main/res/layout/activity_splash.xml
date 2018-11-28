@@ -28,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="50dp"
-            android:text="紅登歡迎你"
+            android:text="红登欢迎你"
             android:textColor="@color/motherlandyellow"
             android:textAlignment="center"
             android:textSize="30dp"

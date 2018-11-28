@@ -177,7 +177,7 @@ class replyActivity : AppCompatActivity() {
         fab.setOnClickListener { view ->
 
             if (attemptComment()) {
-//                Toast.makeText(this@replyActivity, "on99 ar dllm.", Toast.LENGTH_SHORT).show()
+//
                 finish()
             } else {
                 Toast.makeText(this@replyActivity, "Cannot detect any text.", Toast.LENGTH_SHORT).show()

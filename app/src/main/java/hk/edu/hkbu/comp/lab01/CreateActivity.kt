@@ -1,5 +1,6 @@
 package hk.edu.hkbu.comp.lab01
 
+import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.design.widget.Snackbar
@@ -21,6 +22,7 @@ import retrofit2.Call
 class CreateActivity : AppCompatActivity() {
     lateinit var binding: ActivityCreateBinding
     var selectedToy = ""
+    var selectedCatID = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +50,25 @@ class CreateActivity : AppCompatActivity() {
                 override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
 //                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                     selectedToy = parent?.getItemAtPosition(position).toString()
+                    if(selectedToy.equals("吹水台")){
+                        selectedCatID = 1;
+                        Log.d("selectedCatID",selectedCatID.toString())
+                    }else if (selectedToy.equals("時事台")){
+                        selectedCatID = 5;
+                        Log.d("selectedCatID",selectedCatID.toString())
+                    }else if (selectedToy.equals("創意台")){
+                        selectedCatID = 31;
+                        Log.d("selectedCatID",selectedCatID.toString())
+                    }else if (selectedToy.equals("硬件台")){
+                        selectedCatID = 22;
+                        Log.d("selectedCatID",selectedCatID.toString())
+                    }else if (selectedToy.equals("學術台")){
+                        selectedCatID = 18;
+                        Log.d("selectedCatID",selectedCatID.toString())
+                    }else if (selectedToy.equals("兒童台")){
+                        selectedCatID = 29;
+                        Log.d("selectedCatID",selectedCatID.toString())
+                    }
                     Log.d("selectedToy!!!!!!!!!!!!!!!!!!!!!!!!!!",selectedToy)
                 }
 
@@ -66,9 +87,9 @@ class CreateActivity : AppCompatActivity() {
 
                 val userId = LIHKGService.getUID()
                 val timestamp = LIHKGService.timestamp(true)
-                val digest = LIHKGService.createDigest(5, title, content, 0)
+                val digest = LIHKGService.createDigest(selectedCatID, title, content, 0)
 
-                LIHKGService.instance.create(5, title, content, 0, digest, userId, timestamp).enqueue(object : retrofit2.Callback<Response<Any>> {
+                LIHKGService.instance.create(selectedCatID, title, content, 0, digest, userId, timestamp).enqueue(object : retrofit2.Callback<Response<Any>> {
                     override fun onFailure(call: Call<hk.edu.hkbu.comp.lab01.json.Response<Any>>, t: Throwable) {
 //                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
 
@@ -82,6 +103,8 @@ class CreateActivity : AppCompatActivity() {
 //                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                         if (response.body()?.success?.equals(1)!!) {
                             Toast.makeText(this@CreateActivity, "Post Created.", Toast.LENGTH_SHORT).show()
+                            val intent = Intent(applicationContext, MainActivity::class.java)
+                            startActivity(intent)
                         } else {
                             Toast.makeText(this@CreateActivity, "Failed to create.", Toast.LENGTH_SHORT).show()
                         }
