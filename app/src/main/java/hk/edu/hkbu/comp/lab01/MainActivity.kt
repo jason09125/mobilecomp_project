@@ -49,17 +49,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     var user_id: String = LIHKGService.getUID()
 
 
-    private val refreshThreadListListener = SwipeRefreshLayout.OnRefreshListener {
-        // 模擬加載時間
-//        Thread.sleep(200)
-
-        refreshThread()
-//        java.lang.Thread.sleep(200)
-        refreshThreadListLayout.isRefreshing = false
-
-    }
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        setContentView(R.layout.activity_main)
@@ -121,43 +110,63 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean {
                 // ...
                 Log.d("onFling","onFling")
-                var result : Boolean = false;
-                try {
-                    var diffY:Float = e2!!.getY() - e1!!.getY();
-                    var diffX:Float = e2!!.getX() - e1!!.getX();
-                    val SWIPE_VELOCITY_THRESHOLD = 100
-                    val SWIPE_THRESHOLD = 100
-                    if (Math.abs(diffX) > Math.abs(diffY)) {
-                        if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
-                            if (diffX > 0) {
-//                        onSwipeRight();
-                                Log.d("onFling","swipe Right")
-                                getNextPage()
-                                refreshThread()
-                            } else {
-//                        onSwipeLeft();
-                                Log.d("onFling","swipe Left")
+                if (e1 == null || e2 == null)
+                    return false
 
-                            }
-                            result = true;
-                        }
-                    }
-                    else if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
-                        if (diffY > 0) {
-//                    onSwipeBottom();
-                            Log.d("onFling","swipe Down")
-
-                        } else {
-//                    onSwipeTop();
-                            Log.d("onFling","swipe Up")
-
-                        }
-                        result = true;
-                    }
-                } catch (exception:Exception) {
-                    exception.printStackTrace();
+                if (e1.x > e2.x) {
+                    Log.d("onFling","swipe from right")
+                    getNextPage()
+                } else {
+                    Log.d("onFling","swipe from left")
                 }
-                return result;
+//                val SWIPE_THRESHOLD = 3
+//
+//                if (Math.abs(e2!!.getX() - e2!!.getX()) > SWIPE_THRESHOLD) {
+//                    if (e1!!.getX() > e2!!.getX()) {
+//                        Log.d("onFling","swipe from right")
+//                        getNextPage()
+//                    } else {
+//                        Log.d("onFling","swipe from left")
+//                    }
+//                }
+
+                return true
+//                var result : Boolean = false;
+//                try {
+//                    var diffY:Float = e2!!.getY() - e1!!.getY();
+//                    var diffX:Float = e2!!.getX() - e1!!.getX();
+//                    val SWIPE_VELOCITY_THRESHOLD = 30
+//                    val SWIPE_THRESHOLD = 30
+//                    if (Math.abs(diffX) > Math.abs(diffY)) {
+//                        if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+//                            if (diffX > 0) {
+////                        onSwipeRight();
+//                                Log.d("onFling","swipe Right")
+//                                getNextPage()
+//                            } else {
+////                        onSwipeLeft();
+//                                Log.d("onFling","swipe Left")
+//
+//                            }
+//                            result = true;
+//                        }
+//                    }
+//                    else if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
+//                        if (diffY > 0) {
+////                    onSwipeBottom();
+//                            Log.d("onFling","swipe Down")
+//
+//                        } else {
+////                    onSwipeTop();
+//                            Log.d("onFling","swipe Up")
+//
+//                        }
+//                        result = true;
+//                    }
+//                } catch (exception:Exception) {
+//                    exception.printStackTrace();
+//                }
+//                return result;
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
 
@@ -170,7 +179,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
 
         })
-        binding.drawerLayout.setOnTouchListener { v, event ->
+//        binding.root.setOnTouchListener { v, event ->
+//            gestureDetector.onTouchEvent(event)
+//            binding.refreshThreadListLayout.onTouchEvent(event)
+//            binding.navView.onTouchEvent(event)
+//
+//        }
+        binding.appBarMain.contentMain.threadList.setOnTouchListener { v, event ->
+            Log.d("onFling","refreshThreadListLayout.setOnTouchListener")
             gestureDetector.onTouchEvent(event)
         }
 //        binding.root.setOnTouchListener { v, event ->
@@ -190,10 +206,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             fab.setImageResource(R.drawable.ic_logout)
         }
 
-
+        binding.appBarMain.contentMain.refreshThreadListLayout.setOnRefreshListener {
+            refreshThread()
+        }
 
         refreshThread()
-        refreshThreadListLayout.setOnRefreshListener(refreshThreadListListener)
+
     }
 
     fun refreshThread() {
@@ -432,6 +450,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 //                            Log.d("current_category", doc.toObject(Thread::class.java).toString())
 
                             }
+                            binding.appBarMain.contentMain.refreshThreadListLayout.isRefreshing = false
+
                         }
 
                         Log.d("current_category", binding.appBarMain.contentMain.listViewModel?.items.toString())
@@ -474,6 +494,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                             clear()
                             addAll(threads)
                         }
+                        binding.appBarMain.contentMain.refreshThreadListLayout.isRefreshing = false
                     }
                 }
             })
@@ -494,6 +515,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     fun getNextPage() {
         if (current_category != "hot/page/" && current_category != "latest/page/") {
             current_page += 1
+            refreshThread()
         } else {
             Toast.makeText(this@MainActivity, "最後一頁啦", Toast.LENGTH_SHORT).show()
 
@@ -526,7 +548,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 //            }
             R.id.action_next_list -> {
                 getNextPage()
-                refreshThread()
                 return true
             }
             R.id.action_createPost -> {
