@@ -9,8 +9,6 @@ import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
 import hk.edu.hkbu.comp.lab01.databinding.ActivityMainBinding
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.app_bar_main.*
@@ -22,8 +20,7 @@ import android.support.v4.view.MotionEventCompat
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AlertDialog
 import android.text.Html
-import android.view.MotionEvent
-import android.view.View
+import android.view.*
 import android.widget.Toast
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.database.*
@@ -105,6 +102,81 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
 
         nav_view.setNavigationItemSelectedListener(this)
+
+
+
+        val gestureDetector = GestureDetector(binding.root.context, object:GestureDetector.OnGestureListener{
+            override fun onShowPress(e: MotionEvent?) {
+//                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onSingleTapUp(e: MotionEvent?): Boolean {
+                return true
+            }
+
+            override fun onDown(e: MotionEvent?): Boolean {
+                return true
+            }
+
+            override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean {
+                // ...
+                Log.d("onFling","onFling")
+                var result : Boolean = false;
+                try {
+                    var diffY:Float = e2!!.getY() - e1!!.getY();
+                    var diffX:Float = e2!!.getX() - e1!!.getX();
+                    val SWIPE_VELOCITY_THRESHOLD = 100
+                    val SWIPE_THRESHOLD = 100
+                    if (Math.abs(diffX) > Math.abs(diffY)) {
+                        if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                            if (diffX > 0) {
+//                        onSwipeRight();
+                                Log.d("onFling","swipe Right")
+                                getNextPage()
+                                refreshThread()
+                            } else {
+//                        onSwipeLeft();
+                                Log.d("onFling","swipe Left")
+
+                            }
+                            result = true;
+                        }
+                    }
+                    else if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
+                        if (diffY > 0) {
+//                    onSwipeBottom();
+                            Log.d("onFling","swipe Down")
+
+                        } else {
+//                    onSwipeTop();
+                            Log.d("onFling","swipe Up")
+
+                        }
+                        result = true;
+                    }
+                } catch (exception:Exception) {
+                    exception.printStackTrace();
+                }
+                return result;
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float): Boolean {
+                return true
+            }
+
+            override fun onLongPress(e: MotionEvent?) {
+//                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+        })
+        binding.drawerLayout.setOnTouchListener { v, event ->
+            gestureDetector.onTouchEvent(event)
+        }
+//        binding.root.setOnTouchListener { v, event ->
+//            gestureDetector.onTouchEvent(event)
+//            true
+//        }
 
     }
 
